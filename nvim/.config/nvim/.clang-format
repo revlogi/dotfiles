@@ -1,0 +1,9 @@
+BasedOnStyle: Google
+IndentWidth: 4
+ColumnLimit: 100
+DerivePointerAlignment: false
+PointerAlignment: Right
+
+# Specific for cpp
+AccessModifierOffset: -4
+NamespaceIndentation: None
