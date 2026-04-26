@@ -3,6 +3,8 @@ local key2app = {
 	k = "kitty",
 	o = "Obsidian",
 	w = "WeChat",
+	n = "Notes",
+	t = "Typora",
 }
 
 for key, app in pairs(key2app) do
@@ -12,4 +14,3 @@ for key, app in pairs(key2app) do
 end
 
 local hs = hs
-

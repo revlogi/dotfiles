@@ -1,48 +1,111 @@
-## Quick Start
+# RevLogi's Dotfiles
 
-```bash
-# 1. Clone repository
-git clone https://github.com/RevLogi/dotfiles.git ~/dotfiles && cd ~/dotfiles
+A terminal-first, keyboard-driven macOS development environment — **Catppuccin-themed**, **Neovim-powered**, and **AI-enhanced** with seamless Tmux integration.
 
-# 2. Install Homebrew packages
-brew bundle
+> **Fast Facts**
 
-# 3. Create symlinks with Stow
-stow -t ~ zsh nvim opencode orbstack tmux vim kitty gh hammerspoon
+| Aspect | Choice |
+|--------|--------|
+| **Font** | JetBrains Mono Nerd Font |
+| **Colorscheme** | Catppuccin (Mocha dark / Latte light) |
+| **Shell** | Zsh + Zim (asciiship prompt) |
+| **Editor** | Neovim (nightly via `bob`) + Vim (fallback) |
+| **Multiplexer** | Tmux (prefix: `C-f`) |
+| **Terminal** | Kitty |
+| **Dotfile Manager** | GNU Stow |
+| **AI Tools** | OpenCode + Hammerspoon LLM refinement |
 
-# 4. Initialize plugins
-source ~/.zshrc                                        # Install Zim
-git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm  # Install TPM
-~/.tmux/plugins/tpm/bin/install_plugins              # Install tmux plugins
-nvim +Lazy sync +qa                                   # Install nvim plugins
-```
+## Design Philosophy
 
----
+- **Cohesive Aesthetics** — Catppuccin theme applied consistently across Kitty, Tmux, and Neovim; Nerd Font icons throughout.
+- **Keyboard-Driven** — Vi-mode in Zsh, Tmux, and Neovim; arrow keys disabled in Vim; every action has a binding.
+- **Composable** — Tools work as a stack: Kitty hosts Tmux, Tmux hosts Zsh, Zsh launches Neovim; `vim-tmux-navigator` makes pane/window traversal seamless.
+- **Minimal, Not Sparse** — Configure only what you use daily. No unused language servers, no bloated plugin lists. Every package in the Brewfile earns its place.
 
-## Directory Structure
+## Key Components
 
-```
-dotfiles/
- ├── zsh/              → ~/.zshrc, ~/.zimrc (Shell config)
- ├── nvim/             → ~/.config/nvim (Neovim config)
- ├── tmux/             → ~/.tmux.conf (Tmux config)
- ├── kitty/            → ~/.config/kitty (Terminal)
- ├── gh/               → ~/.config/gh (GitHub CLI)
- ├── vim/              → ~/.vimrc (Vim config)
- ├── opencode/         → ~/.config/opencode (AI coding)
- ├── orbstack/         → ~/.orbstack/ (Docker/Linux VM - manual sync)
- ├── hammerspoon/      → ~/.hammerspoon/ (macOS automation)
- ├── .vim/             → ~/.vim/ (Vim plugins)
- ├── Brewfile          (Homebrew packages)
- ├── .gitignore        (Excluded files)
- └── README.md         (This file)
-```
+| Component | Role | Highlights |
+|-----------|------|------------|
+| **Zsh** | Shell | Zim framework with asciiship prompt, autosuggestions, syntax highlighting, fzf-tab completion; vi-mode with cursor shape change; aliases for quick navigation (`c`→Projects, `d`→Developer) |
+| **Neovim** | Primary editor | kickstart.nvim foundation; blink.cmp for Tab-based completion; LSP for C/C++/Lua/Swift/Python/TypeScript/JSON/Vim; DAP debugging; treesitter; gitsigns; Oil.nvim; LeetCode integration; Conform formatting (stylua/clang-format/swiftformat) |
+| **Tmux** | Terminal multiplexer | Catppuccin status bar with CPU/RAM/temperature monitoring via `smctemp`; smart-split (`C-f i` splits vertical/horizontal based on pane ratio); vi-mode copy; seamless Neovim navigation |
+| **Kitty** | Terminal emulator | Auto theme switching (dark/light Catppuccin); remote control for image.nvim; powerline tab bar |
+| **Hammerspoon** | macOS automation | Application launcher (Alt+key to focus apps); LLM-powered text refinement (GLM-4 / MiniMax) via Alt+R |
+| **Vim** | Fallback editor | Minimal vim-plug setup with slime, surround, trailing-whitespace; hard mode (no arrow keys) |
+| **OpenCode** | AI coding agent | Terminal-native AI pair programming |
+| **OrbStack** | Docker / Linux VM | Lightweight container runtime for macOS |
 
-**Symlinks:** Edit files in `~` directly (changes propagate to dotfiles).
+## Keybindings
 
----
+### Zsh
 
-## Setup on New Mac
+| Binding | Action |
+|---------|--------|
+| `c` | `cd ~/Developer/Projects` |
+| `d` | `cd ~/Developer` |
+| `y` | Launch Yazi file manager (cd on exit) |
+| `s` | `fastfetch` system info |
+| `o` | `opencode` |
+| `t` | `tmux` |
+| `nv` | `nvim` |
+
+### Tmux *(prefix: `C-f`)*
+
+| Binding | Action |
+|---------|--------|
+| `C-f i` | Smart split (auto-picks vertical or horizontal) |
+| `C-f "` / `C-f %` | Split vertical / horizontal |
+| `C-f c` | New window in `~` |
+| `C-f s` | Session/window tree |
+| `C-f K` | Clear scrollback |
+| `C-f r` | Reload config |
+| `S-Arrow` | Resize pane by 5 |
+| `M-S-Left/Right` | Move window left/right |
+| `C-h/j/k/l` | Navigate seamlessly between Tmux panes and Neovim splits |
+
+### Neovim *(leader: `Space`)*
+
+| Binding | Action |
+|---------|--------|
+| `-` | Oil.nvim parent directory (float) |
+| `\` | Neo-tree reveal / close |
+| `C-h/j/k/l` | Navigate splits (via vim-tmux-navigator) |
+| `gy` | Change surrounding to `$()` (Lua) |
+| **LSP** | |
+| `<leader>k` | Hover documentation |
+| `gra` | Code action |
+| `grr` / `gri` / `grd` | References / Implementation / Definition |
+| `gO` / `gW` | Document / Workspace symbols |
+| `grn` | Rename |
+| `<leader>q` | Diagnostic quickfix list |
+| **Git** | |
+| `<leader>hs` / `<leader>hr` | Stage / Reset hunk |
+| `<leader>hS` / `<leader>hR` | Stage / Reset buffer |
+| `<leader>hb` | Blame line |
+| `<leader>hp` | Preview hunk |
+| `<leader>hd` / `<leader>hD` | Diff against index / last commit |
+| **Debug** | |
+| `F5` | Start / Continue |
+| `F1` / `F2` / `F3` | Step into / Over / Out |
+| `<leader>b` | Toggle breakpoint |
+| `F7` | Toggle DAP UI |
+| **Other** | |
+| `<leader>f` | Format buffer |
+
+### Hammerspoon
+
+| Binding | Action |
+|---------|--------|
+| `Alt+S` | Safari |
+| `Alt+K` | Kitty |
+| `Alt+O` | Obsidian |
+| `Alt+W` | WeChat |
+| `Alt+N` | Notes |
+| `Alt+T` | Typora |
+| `Alt+R` | Refine selected text via LLM |
+| `Alt+1` / `Alt+2` | Refine with alternative LLM providers |
+
+## Installation
 
 ### Prerequisites
 
@@ -55,52 +118,73 @@ xcode-select --install
 eval "$(/opt/homebrew/bin/brew shellenv)"
 ```
 
-### Installation Steps
+### Quick Start
 
-1. **Clone repository:** `git clone https://github.com/RevLogi/dotfiles.git ~/dotfiles`
-2. **Install packages:** `cd ~/dotfiles && brew bundle`
-3. **Create symlinks:** `stow -t ~ zsh nvim opencode orbstack tmux vim kitty gh hammerspoon`
-4. **Install Zim:** `source ~/.zshrc` (auto-installs on first load)
-5. **Install TPM:** `git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm`
-6. **Install tmux plugins:** `~/.tmux/plugins/tpm/bin/install_plugins`
-7. **Install Neovim plugins:** `nvim +Lazy sync +qa`
-8. **Configure Hammerspoon:** Set `GLM_API_KEY` environment variable (see hammerspoon/.env.example)
+```bash
+# 1. Clone
+git clone https://github.com/RevLogi/dotfiles.git ~/dotfiles && cd ~/dotfiles
 
----
+# 2. Install all packages
+brew bundle
+
+# 3. Create symlinks with Stow
+stow -t ~ zsh nvim opencode orbstack tmux vim kitty gh hammerspoon
+
+# 4. Initialize plugins
+source ~/.zshrc                                                   # Zim auto-installs
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm # TPM
+~/.tmux/plugins/tpm/bin/install_plugins                           # Tmux plugins
+nvim +Lazy\ sync +qa                                              # Neovim plugins
+```
+
+### Hammerspoon Setup
+
+1. Copy the config template and set your API keys:
+
+```bash
+cp ~/dotfiles/hammerspoon/.hammerspoon/config.lua.example ~/.hammerspoon/config.lua
+```
+
+2. Create `~/.env` with your API keys:
+
+```
+GLM_API_KEY=your_glm_key_here
+MINIMAX_API_KEY=your_minimax_key_here
+```
+
+3. Reload Hammerspoon (`Cmd+Shift+R`).
+
+## Directory Structure
+
+```
+dotfiles/
+ ├── zsh/              → ~/.zshrc, ~/.zimrc (Shell config)
+ ├── nvim/             → ~/.config/nvim (Neovim config)
+ ├── tmux/             → ~/.tmux.conf (Tmux config)
+ ├── kitty/            → ~/.config/kitty (Terminal)
+ ├── gh/               → ~/.config/gh (GitHub CLI)
+ ├── vim/              → ~/.vimrc (Vim config)
+ ├── opencode/         → ~/.config/opencode (AI coding)
+ ├── orbstack/         → ~/.orbstack/ (Docker/Linux VM)
+ ├── hammerspoon/      → ~/.hammerspoon/ (macOS automation)
+ ├── .vim/             → ~/.vim/ (Vim ftplugin + plugins)
+ ├── Brewfile          (Homebrew packages)
+ ├── .gitignore        (Excluded files)
+ └── README.md         (This file)
+```
+
+Files are symlinked into `~` via Stow — edit them in their original locations or directly in `~`.
 
 ## Daily Usage
 
-### Editing Configurations
-
-Edit files in `~` directly (they're symlinks):
-```bash
-vim ~/.zshrc            # Changes propagate to ~/dotfiles/zsh/.zshrc
-```
-
-Or edit in dotfiles directory:
-```bash
-vim ~/dotfiles/zsh/.zshrc
-source ~/.zshrc          # Test changes
-```
-
-### Stowing/Unstowing
+Changes to any dotfile propagate automatically through the Stow symlink:
 
 ```bash
-# Add new package
-mkdir ~/dotfiles/newapp && cd ~/dotfiles/newapp
-echo "config" > .newapprc
-cd ~/dotfiles && stow -t ~ newapp
-
-# Update existing package
-stow -R -t ~ nvim
-
-# Remove package
-stow -D -t ~ unwantedapp && rm -rf unwantedapp
+vim ~/dotfiles/zsh/.zshrc && source ~/.zshrc
 ```
 
 ### Git Workflow
 
-**Sync from remote:**
 ```bash
 cd ~/dotfiles
 git pull origin main
@@ -108,22 +192,16 @@ stow -R -t ~ zsh nvim opencode orbstack tmux vim kitty gh hammerspoon
 source ~/.zshrc && tmux source-file ~/.tmux.conf
 ```
 
-**Commit and push:**
 ```bash
-cd ~/dotfiles
-git status && git diff
-git add .
-git commit -m "Description of changes"
-git push origin main
+cd ~/dotfiles && git add . && git commit -m "Description of changes" && git push origin main
 ```
 
 ### Periodic Maintenance
 
 **Weekly:**
-
 ```bash
 brew update && brew upgrade && brew cleanup
-nvim +Lazy sync +qa
+nvim +Lazy\ sync +qa
 ```
 
 **Monthly:**
@@ -131,35 +209,4 @@ nvim +Lazy sync +qa
 ~/.tmux/plugins/tpm/bin/update_plugins all
 nvim +checkhealth +qa
 git fetch -p && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs git branch -D
-brew cleanup --prune=30
 ```
-
-### Hammerspoon Features
-
-**Application Launcher** (applauncher.lua)
-- Press `Alt + [key]` to launch/focus applications:
-  - `Alt + S`: Safari
-  - `Alt + K`: kitty
-  - `Alt + O`: Obsidian
-  - `Alt + W`: WeChat
-
-**Text Refinement** (languagetool.lua)
-
-- Press `Alt + R` to refine selected using configured API
-- Automatically copies selected text (or clipboard contents), refines it via API, and pastes the result
-
-**Setup Instructions**
-
-1. Copy config template to local:
-   ```bash
-   cp ~/dotfiles/hammerspoon/.hammerspoon/config.lua.example \
-   ~/.hammerspoon/config.lua
-   ```
-2. Create ~/.env with your API keys:
-
-```
-GLM_API_KEY=your_glm_key_here
-MINIMAX_API_KEY=your_minimax_key_here
-```
-
-3. Reload Hammerspoon (Cmd+Shift+R)

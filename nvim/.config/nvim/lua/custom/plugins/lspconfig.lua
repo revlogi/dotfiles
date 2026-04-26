@@ -9,6 +9,7 @@ return {
   },
   config = function()
     local lsp_utils = require 'lsp.init'
+    local lspconfig = require 'lspconfig'
 
     local servers = {
       'lua_ls',
@@ -34,11 +35,14 @@ return {
       automatic_installation = false,
       handlers = {
         function(server_name)
-          if vim.tbl_contains(servers, server_name) then
-            vim.lsp.enable(server_name)
-          end
+          vim.lsp.config(server_name, {
+            capabilities = lsp_utils.get_capabilities(),
+          })
+          vim.lsp.enable(server_name)
         end,
       },
     }
+
+    require('lsp.sourcekit').setup()
   end,
 }

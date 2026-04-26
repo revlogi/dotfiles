@@ -87,6 +87,7 @@ cask "emacs-app"              # GNU Emacs text editor
 
 # Language formatters & linters
 brew "stylua"                 # Lua code formatter
+brew "swiftformat"            # Swift code formatter
 
 # =====================================================================
 # NOTES & KNOWLEDGE
