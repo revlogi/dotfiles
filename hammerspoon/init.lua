@@ -1,3 +1,2 @@
 require("applauncher")
 require("languagetool")
-
