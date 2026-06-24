@@ -7,9 +7,6 @@
 "
 " Features:
 " - Basic utility plugins (whitespace, slime, surround)
-" - Hard mode (no arrow keys)
-" - Auto-save
-"
 " Removed:
 " - LSP functionality (coc.nvim and all related config)
 " - File manager (vim-fern)
@@ -52,20 +49,6 @@ set mouse+=a                   " Enable mouse support
 " Unbind 'Q' (Ex mode)
 nmap Q <Nop>
 
-" --- HARD MODE: Disable Arrow Keys ---
-" Force yourself to use h/j/k/l
-nnoremap <Left>  :echoe "Use h"<CR>
-nnoremap <Right> :echoe "Use l"<CR>
-nnoremap <Up>    :echoe "Use k"<CR>
-nnoremap <Down>  :echoe "Use j"<CR>
-inoremap <Left>  <ESC>:echoe "Use h"<CR>
-inoremap <Right> <ESC>:echoe "Use l"<CR>
-inoremap <Up>    <ESC>:echoe "Use k"<CR>
-inoremap <Down>  <ESC>:echoe "Use j"<CR>
-
 " Vim slime configuration
 let g:slime_target = "tmux"
-
-" Auto save
-autocmd TextChanged,TextChangedI <buffer> silent write
 

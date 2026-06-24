@@ -12,6 +12,10 @@
     "markdownlint": {
       "command": ["markdownlint", "--fix", "$FILE"],
       "extensions": [".md"]
+    },
+    "prettierd": {
+      "command": ["prettierd", "$FILE"],
+      "extensions": [".js", ".ts", ".jsx", ".tsx", ".json", ".css", ".html"]
     }
   },
   "watcher": {

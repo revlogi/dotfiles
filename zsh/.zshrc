@@ -128,46 +128,21 @@ alias icloud="cd ~/Library/Mobile\ Documents/com~apple~CloudDocs/"
 alias dl="cd ~/Downloads"
 alias d="cd ~/Developer"
 alias c="cd ~/Developer/Projects"
+alias ll="eza -lah"
+alias lt="eza --tree --level=2"
+alias lg="eza -lah --git"
 
 # Core Aliases
 alias o="opencode"
-alias s='fastfetch'
+alias ff='fastfetch'
 alias v='vim'
 alias sz='source ~/.zshrc'
 alias nv='nvim'
 alias t='tmux'
 
-function gemini() {
-    # 1. Detect macOS System Theme
-    # Returns "Dark" if dark mode is on, otherwise returns nothing or error
-    local mode=$(defaults read -g AppleInterfaceStyle 2>/dev/null)
+# bun completions
+[ -s "/Users/liuguangxi/.bun/_bun" ] && source "/Users/liuguangxi/.bun/_bun"
 
-    # 2. Select the appropriate Gemini CLI theme
-    # "Default" is the standard dark theme. "Default Light" is the light version.
-    if [[ "$mode" == "Dark" ]]; then
-        local theme="GitHub"
-    else
-        local theme="ANSI Light"
-    fi
-
-    # 3. Update the settings.json file automatically
-    # Uses sed to find the "theme" line and replace it with the detected one.
-    # This assumes your settings.json is in the default ~/.gemini/ location.
-    sed -i '' 's/"theme": "[^"]*"/"theme": "'"$theme"'"/' ~/.gemini/settings.json
-
-    # 4. Launch the actual Gemini CLI
-    command gemini "$@"
-}
-
-function y() {
-	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
-	yazi "$@" --cwd-file="$tmp"
-	IFS= read -r -d '' cwd < "$tmp"
-	[ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
-	rm -f -- "$tmp"
-}
-
-
-[ -f "/Users/liuguangxi/.ghcup/env" ] && . "/Users/liuguangxi/.ghcup/env" # ghcup-env
-eval "$(zoxide init zsh)"
-
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"

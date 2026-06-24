@@ -1,2 +1,0 @@
-require("applauncher")
-require("languagetool")

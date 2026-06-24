@@ -30,12 +30,23 @@ return {
         },
         stdin = true,
       },
+      ['prettierd'] = {
+        command = '/opt/homebrew/bin/prettierd',
+        stdin = true,
+      },
     },
     formatters_by_ft = {
       lua = { 'stylua' },
       c = { 'clang-format' },
       cpp = { 'clang-format' },
       swift = { 'swiftformat' },
+      javascript = { 'prettierd' },
+      javascriptreact = { 'prettierd' },
+      typescript = { 'prettierd' },
+      typescriptreact = { 'prettierd' },
+      json = { 'prettierd' },
+      css = { 'prettierd' },
+      html = { 'prettierd' },
     },
   },
 }

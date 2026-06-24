@@ -22,6 +22,7 @@ return {
     },
     keymaps = {
       ['-'] = 'actions.parent',
+      ['q'] = 'actions.close',
     },
     columns = {
       'icon',
