@@ -55,9 +55,14 @@ return {
     require('mason-tool-installer').setup { ensure_installed = tools }
 
     for _, server_name in ipairs(servers) do
-      vim.lsp.config(server_name, {
+      local config = {
         capabilities = lsp_utils.get_capabilities(),
-      })
+      }
+      local has_custom_config, custom_config = pcall(require, 'lsp.' .. server_name)
+      if has_custom_config then
+        config = vim.tbl_deep_extend('force', config, custom_config)
+      end
+      vim.lsp.config(server_name, config)
     end
 
     require('mason-lspconfig').setup {
