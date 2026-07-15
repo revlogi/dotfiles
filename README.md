@@ -107,6 +107,10 @@ A terminal-first, keyboard-driven macOS development environment — **Catppuccin
 
 ## Installation
 
+For the shared Ubuntu server workflow, see [`SERVER.md`](SERVER.md). The server
+uses only the portable `zsh`, `nvim`, and `tmux` packages and installs all
+machine-specific binaries and caches independently.
+
 ### Prerequisites
 
 ```bash

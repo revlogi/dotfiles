@@ -1,0 +1,17 @@
+channels:
+  - conda-forge
+dependencies:
+  - zsh >=5.9
+  - neovim >=0.11
+  - ripgrep
+  - fd-find
+  - fzf
+  - stow
+  - cmake
+  - ninja
+  - lazygit
+  - zoxide
+  - eza
+  - clang-tools
+  - lua-language-server
+  - stylua

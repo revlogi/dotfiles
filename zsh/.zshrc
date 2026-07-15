@@ -7,12 +7,11 @@
 # Zsh configuration
 # -----------------
 
+[[ -o interactive ]] || return
+
 #
 # History
 #
-
-# Use the nightly version of neovim
-export PATH="$HOME/.local/share/bob/nvim-bin:$PATH"
 
 # Remove older command from the history if a duplicate is to be added.
 setopt HIST_IGNORE_ALL_DUPS
@@ -36,7 +35,9 @@ zle -N zle-keymap-select
 _fix_cursor() {
    echo -ne '\e[5 q'
 }
-precmd_functions+=(_fix_cursor)
+if (( ${precmd_functions[(I)_fix_cursor]:-0} == 0 )); then
+  precmd_functions+=(_fix_cursor)
+fi
 
 # Prompt for spelling correction of commands.
 #setopt CORRECT
@@ -124,10 +125,7 @@ source ${ZIM_HOME}/init.zsh
 # }}} End configuration added by Zim Framework install
 
 # Quick Navigation
-alias icloud="cd ~/Library/Mobile\ Documents/com~apple~CloudDocs/"
 alias dl="cd ~/Downloads"
-alias d="cd ~/Developer"
-alias c="cd ~/Developer/Projects"
 alias ll="eza -lah"
 alias lt="eza --tree --level=2"
 alias lg="eza -lah --git"
@@ -136,13 +134,23 @@ alias lg="eza -lah --git"
 alias o="opencode"
 alias ff='fastfetch'
 alias v='vim'
-alias sz='source ~/.zshrc'
+alias sz='exec zsh'
 alias nv='nvim'
 alias t='tmux'
 
-# bun completions
-[ -s "/Users/liuguangxi/.bun/_bun" ] && source "/Users/liuguangxi/.bun/_bun"
+if (( ${+commands[zoxide]} )); then
+  eval "$(zoxide init zsh)"
+  alias cd='z'
+fi
 
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
+# bun completions
+[[ -s "$BUN_INSTALL/_bun" ]] && source "$BUN_INSTALL/_bun"
+
+case "$(uname -s)" in
+  Darwin) source "${XDG_CONFIG_HOME:-$HOME/.config}/zsh/macos.zsh" ;;
+  Linux) source "${XDG_CONFIG_HOME:-$HOME/.config}/zsh/linux.zsh" ;;
+esac
+
+if [[ -n "$SSH_CONNECTION" ]]; then
+  source "${XDG_CONFIG_HOME:-$HOME/.config}/zsh/remote.zsh"
+fi
