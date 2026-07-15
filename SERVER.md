@@ -58,9 +58,9 @@ the server. Keep the following directories local to each machine:
 ```
 
 The environment provides ripgrep, fd, clangd, clang-format,
-lua-language-server, and stylua. The official archive provides Neovim. Mason
-only installs a remote tool when no executable is already available; installer
-concurrency is limited to two.
+lua-language-server, stylua, and the tree-sitter CLI. The official archive
+provides Neovim. Mason only installs a remote tool when no executable is already
+available; installer concurrency is limited to two.
 
 ## Python And Triton
 
