@@ -33,6 +33,10 @@ export MAMBA_ROOT_PREFIX="$HOME/.local/share/micromamba"
   -f "$HOME/dotfiles/server/dev-tools.yml"
 ```
 
+Install Neovim 0.11 or newer from its official Linux x86_64 release archive in
+`~/.local/opt/nvim`. This is kept separate because conda-forge does not provide
+the required Neovim executable version.
+
 Do not run `micromamba shell init`. Zsh reads the tools prefix from `.zshenv`,
 and tmux selects that zsh as its default shell for SSH sessions.
 
@@ -53,10 +57,10 @@ the server. Keep the following directories local to each machine:
 ~/.tmux/plugins
 ```
 
-The environment provides Neovim 0.11 or newer, ripgrep, fd, clangd,
-clang-format, lua-language-server, and stylua. Mason only installs a remote tool
-when no executable is already available; installer concurrency is limited to
-two.
+The environment provides ripgrep, fd, clangd, clang-format,
+lua-language-server, and stylua. The official archive provides Neovim. Mason
+only installs a remote tool when no executable is already available; installer
+concurrency is limited to two.
 
 ## Python And Triton
 

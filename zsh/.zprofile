@@ -9,6 +9,7 @@ fi
 typeset -U path PATH
 path=(
   "$HOME/.local/bin"
+  "$HOME/.local/opt/nvim/bin"
   "$HOME/.local/opt/dev-tools/bin"
   "$HOME/.local/share/bob/nvim-bin"
   "$HOME/.bun/bin"

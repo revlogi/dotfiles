@@ -2,7 +2,6 @@ channels:
   - conda-forge
 dependencies:
   - zsh >=5.9
-  - neovim >=0.11
   - ripgrep
   - fd-find
   - fzf
