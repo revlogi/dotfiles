@@ -1,6 +1,10 @@
 local lsp_utils = require 'lsp.init'
 
 local function setup()
+  if vim.fn.executable 'xcrun' ~= 1 then
+    return
+  end
+
   local function start_lsp()
     local buf = vim.api.nvim_get_current_buf()
     local fname = vim.api.nvim_buf_get_name(buf)

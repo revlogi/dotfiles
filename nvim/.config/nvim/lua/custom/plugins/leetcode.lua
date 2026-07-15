@@ -1,5 +1,6 @@
 return {
   'kawre/leetcode.nvim',
+  enabled = not require('custom.platform').is_remote,
   build = ':TSUpdate html',
   dependencies = {
     'nvim-telescope/telescope.nvim',

@@ -13,7 +13,8 @@ return {
     },
   },
   opts = {
-    notify_on_error = false,
+    notify_on_error = true,
+    notify_no_formatters = false,
     format_on_save = function(bufnr)
       return {
         timeout_ms = 3000,
@@ -22,23 +23,22 @@ return {
     end,
     formatters = {
       ['clang-format'] = {
-        command = '/opt/homebrew/bin/clang-format',
+        command = 'clang-format',
         args = {
-          '-style=file:/Users/liuguangxi/dotfiles/nvim/.config/nvim/.clang-format',
+          '--style=file',
+          '--fallback-style=Google',
           '--assume-filename',
           '$FILENAME',
         },
         stdin = true,
       },
-      ['prettierd'] = {
-        command = '/opt/homebrew/bin/prettierd',
-        stdin = true,
-      },
     },
     formatters_by_ft = {
       lua = { 'stylua' },
+      python = { 'ruff_format' },
       c = { 'clang-format' },
       cpp = { 'clang-format' },
+      cuda = { 'clang-format' },
       swift = { 'swiftformat' },
       javascript = { 'prettierd' },
       javascriptreact = { 'prettierd' },

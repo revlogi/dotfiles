@@ -2,6 +2,8 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+local platform = require 'custom.platform'
+
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
 
@@ -25,6 +27,20 @@ vim.o.showmode = false
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
 vim.schedule(function()
+  if platform.is_remote then
+    local osc52 = require 'vim.ui.clipboard.osc52'
+    vim.g.clipboard = {
+      name = 'OSC 52',
+      copy = {
+        ['+'] = osc52.copy '+',
+        ['*'] = osc52.copy '*',
+      },
+      paste = {
+        ['+'] = osc52.paste '+',
+        ['*'] = osc52.paste '*',
+      },
+    }
+  end
   vim.o.clipboard = 'unnamedplus'
 end)
 
@@ -143,9 +159,16 @@ vim.api.nvim_create_autocmd('InsertLeave', {
   end,
 })
 
--- Set 4-space indentation for C/C++ files
+vim.filetype.add {
+  extension = {
+    cu = 'cuda',
+    cuh = 'cuda',
+  },
+}
+
+-- Set 4-space indentation for C/C++/CUDA files
 vim.api.nvim_create_autocmd('FileType', {
-  pattern = { 'c', 'cpp' },
+  pattern = { 'c', 'cpp', 'cuda' },
   callback = function()
     vim.opt_local.shiftwidth = 4
     vim.opt_local.tabstop = 4
@@ -184,6 +207,7 @@ rtp:prepend(lazypath)
 require('lazy').setup({
   { import = 'custom.plugins' },
 }, {
+  concurrency = platform.is_remote and 4 or nil,
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
     -- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table
