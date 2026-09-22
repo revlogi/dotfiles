@@ -15,7 +15,10 @@
 
 ## Validation
 
-- Inspect `git diff` and `git status --short` after changes.
+- Configuration is distributed with Syncthing and deployed with Stow. Run `dot check` after changes; review changed files and maintain recoverable snapshots.
+- While `.git` exists during migration, also inspect `git diff` and `git status --short`. Git is not the synchronization mechanism; do not commit or push unless requested.
+- Keep `sync-ignore.txt` current when introducing new source roots. Never sync credentials, dependencies, runtime state, or `.git`.
+- Resolve Syncthing conflict copies before starting applications that discover scripts automatically.
 - For Neovim changes, run `stylua --check nvim/.config/nvim` and `nvim --headless +qa`.
 - For Pi extension changes, run `npm --prefix ~/.pi/agent run check` after installing its development dependencies.
 - Do not claim a check passed unless its command completed successfully.

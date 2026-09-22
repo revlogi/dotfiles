@@ -1,2 +1,1 @@
 require("applauncher")
-require("audioswitch")

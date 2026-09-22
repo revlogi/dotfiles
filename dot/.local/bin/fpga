@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+# Run the machine-local OSS CAD Suite without adding it to the global PATH.
+# Compatible with macOS Bash 3.2.
+set -u
+
+usage() {
+  cat <<'HELP'
+Usage:
+  fpga <tool> [args...]   Run a tool from OSS CAD Suite
+  fpga shell             Start an interactive shell with the suite activated
+  fpga wave [file.fst]   Open a waveform in the pinned Surfer build
+  fpga env               Print the selected local install paths
+
+Override discovery with OSS_CAD_SUITE and SURFER_HOME.
+HELP
+}
+
+die() { printf 'fpga: %s\n' "$*" >&2; exit 1; }
+
+suite=${OSS_CAD_SUITE:-"$HOME/.local/opt/oss-cad-suite-current"}
+surfer_home=${SURFER_HOME:-"$HOME/.local/opt/surfer-current"}
+[ -d "$suite" ] || die "OSS CAD Suite not found at $suite (see docs/fpga.md)"
+[ -r "$suite/environment" ] || die "activation script missing: $suite/environment"
+
+# The official activation script sets PATH, VERILATOR_ROOT, GHDL_PREFIX, and
+# the suite-local Python environment. Nothing leaks back into the parent shell.
+# shellcheck disable=SC1090
+source "$suite/environment"
+
+command_name=${1:-help}
+case "$command_name" in
+  help|-h|--help)
+    usage
+    ;;
+  env)
+    printf 'OSS_CAD_SUITE=%s\nSURFER_HOME=%s\n' "$suite" "$surfer_home"
+    ;;
+  shell)
+    [ "$#" -eq 1 ] || die 'shell takes no arguments'
+    exec "${SHELL:-/bin/bash}" -i
+    ;;
+  wave)
+    shift
+    [ -x "$surfer_home/surfer" ] || die "Surfer not found at $surfer_home/surfer"
+    [ "$#" -le 1 ] || die 'wave accepts at most one waveform file'
+    exec "$surfer_home/surfer" "$@"
+    ;;
+  *)
+    tool=$1
+    shift
+    case "$tool" in */*) die 'tool must be a command name, not a path' ;; esac
+    [ -x "$suite/bin/$tool" ] || die "tool is not in the selected suite: $tool"
+    exec "$suite/bin/$tool" "$@"
+    ;;
+esac

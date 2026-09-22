@@ -1,6 +1,6 @@
 ---
 name: material-mentor
-description: Guide material-first and framework-first learning from books, papers, courses, transcripts, or source code. Use when the learner invokes /learn, /learn-modern, /check, /review, /explore, or /checkpoint; asks to study or understand human-written material; wants Socratic diagnosis, retrieval practice, critique, modernization, or an evidence-based learning checkpoint; or works in a course directory containing COURSE.md, PROGRESS.md, QUESTIONS.md, and material/.
+description: Guide source-grounded learning from books, papers, courses, transcripts, or source code, with evidence-based course state. Use when the learner invokes /learn, /learn-modern, /check, /review, /explore, or /checkpoint; asks to use the legacy material-first workflow; or works in a course directory containing COURSE.md, PROGRESS.md, QUESTIONS.md, and material/. Use the separate teach skill for rich HTML lessons.
 ---
 
 # Material Mentor
@@ -12,7 +12,7 @@ Treat the human-written material as the curriculum anchor. Help the learner read
 1. Determine the workspace scope. Use the course workflow when the prompt names a course in the current directory, an explicit course path is supplied, or a course root is present. Otherwise support the supplied material without persistent course state.
 2. For the course workflow, locate the course root. Prefer the current directory; accept an explicitly named path. A course root contains `COURSE.md` and `material/`.
 3. When the course workflow is requested but no course exists, offer to initialize one and stop. After the learner accepts, resolve `scripts/init-course.sh` relative to this `SKILL.md` and run it as `<script> <directory> <title>`. Preserve every existing file.
-4. When a course exists, read and follow [references/state-schema.md](references/state-schema.md), then read `COURSE.md`, `PROGRESS.md`, and `QUESTIONS.md`. Read `CONCEPTS.md` only when connections are relevant.
+4. When a course exists, read and follow [references/state-schema.md](references/state-schema.md), then read `COURSE.md`, `PROGRESS.md`, and `QUESTIONS.md`. Reconcile pending interactive evidence before choosing the next lesson. Read `CONCEPTS.md` only when connections are relevant.
 5. Read only the material needed for the current operation. Use headings, a table of contents, filenames, and search before loading large sources.
 
 Apply the ownership contract in the state schema to every course-workspace read and write. In a stateless operation, use the supplied material as the source anchor and skip course-state reads and writes.
@@ -41,7 +41,7 @@ Use an explicitly requested mode. Otherwise select the narrowest mode matching t
 
 | Mode | Select for | Authoritative procedure |
 |---|---|---|
-| Learn | Orienting the next material-first reading chunk | [references/learn.md](references/learn.md) |
+| Learn (`/learn`) | Teaching one source-grounded concept with interactive practice | [references/learn.md](references/learn.md) |
 | Modern Learn | Following the material through current designs or implementations | [references/learn-modern.md](references/learn-modern.md) |
 | Check | Running a short recognition check after reading | [references/check.md](references/check.md) |
 | Review | Testing retained understanding later | [references/review.md](references/review.md) |

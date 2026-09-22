@@ -1,0 +1,17 @@
+{
+  "name": "@liuguangxi/pi-engineering-workflow",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "keywords": ["pi-package"],
+  "pi": {
+    "skills": [
+      "./skills/grill-with-docs",
+      "./skills/to-spec",
+      "./skills/to-tickets",
+      "./skills/implement",
+      "./skills/code-review"
+    ],
+    "prompts": ["./prompts"]
+  }
+}

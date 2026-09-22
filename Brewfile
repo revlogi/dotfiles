@@ -13,6 +13,7 @@ brew "openjdk"
 brew "zig"
 brew "zls"
 brew "tree-sitter-cli"
+brew "lz4" # Verilator FST development headers used by the local OSS CAD Suite
 
 # Terminal
 brew "tmux"
@@ -25,6 +26,7 @@ brew "yazi"
 brew "fastfetch"
 brew "ncdu"
 brew "stow"
+brew "syncthing"
 brew "btop"
 brew "narugit/tap/smctemp"
 brew "jq"
@@ -45,7 +47,8 @@ brew "basedpyright"
 brew "ffmpeg"
 brew "tesseract"
 
-# AI coding agent
+# AI coding agents
+npm "@openai/codex"
 npm "@earendil-works/pi-coding-agent"
 
 # Applications

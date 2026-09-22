@@ -1,5 +1,7 @@
 # Material-first learning 使用指南
 
+> 这是当前保留供回退和迁移参考的旧工作流；`settings.json` 默认加载的是新的 `pi-teach` package。
+
 这套工作流的目标是：**让人写的 material 决定学习主线，让 Pi 负责暴露理解缺口。** 对实现已经过时或风格不合适的材料，也可以只保留它的课程框架，改用现代资料和实现完成学习。
 
 它不是让 AI 重新生成一本更容易读的教材，而是建立下面这个循环：
@@ -7,13 +9,13 @@
 ```text
 选择一小段 material
         ↓
-自己阅读、运行代码或推导
+在 HTML 页对照原文、辅助讲解与图解
         ↓
-用短选择题辨认核心区别、加深印象
+提交解释或预测，Pi 自动评估并回传反馈
         ↓
 用作业、证明或实现任务完成真实应用
         ↓
-记录有证据的掌握状态
+自动记录作答证据，Pi 更新有证据的掌握状态
         ↓
 继续下一小段
 ```
@@ -36,9 +38,10 @@ pi --offline --no-session --verbose
 启动信息中应该能看到：
 
 - skill：`material-mentor`
-- prompts：`/learn`、`/learn-modern`、`/check`、`/review`、`/explore`、`/checkpoint`
+- prompts：`/learn`、`/teach`、`/learn-modern`、`/check`、`/review`、`/explore`、`/checkpoint`
 - extension：`ask-user.ts`
 - extension：`learning-workspace.ts`
+- extension：`interactive-lessons.ts`
 
 `bash-guard.ts`、`change-log.ts` 和第三方 `/btw` 属于基础 Pi 配置，不是本 package 的依赖。
 
@@ -113,21 +116,21 @@ pi
 
 `COURSE.md` 所在目录就是课程根目录。若从 Vault 根目录或其他项目目录启动，Pi 无法可靠判断你当前要学哪门课程。
 
-## 4. 六个主要命令
+## 4. 主要命令
 
 ### `/learn [section]`
 
-确定下一段应该读什么，但不提前讲解内容。
+基于一小段原材料，生成配套 HTML 教学页。`/teach` 是同一模式的入口。
 
 ```text
 /learn
 ```
 
-Pi 会根据 `COURSE.md` 和 `PROGRESS.md` 选择下一小段，并告诉你：
+Pi 会先处理尚未评估的作答，再根据课程状态选择下一小段。页面包含：
 
-- 读哪个文件、章节或页码；
-- 本次唯一的学习目标；
-- 阅读时需要注意的两三个问题。
+- 原文摘录、精确位置和打开完整原文的链接；
+- 与原文分开的 AI 讲解、可选图解和一个学习目标；
+- 少量解释、预测或应用题，以及按需提示。
 
 也可以显式指定：
 
@@ -135,7 +138,11 @@ Pi 会根据 `COURSE.md` 和 `PROGRESS.md` 选择下一小段，并告诉你：
 /learn chapter 5 §5.1–§5.3
 ```
 
-拿到阅读任务后，先回到原材料。不要让 Pi 在阅读前把整节总结一遍。
+打开 Pi 返回的本机 URL，保持 Pi 运行。在页面提交回答后，证据立即保存，Pi 自动评估、维护课程状态，再把反馈显示到页面。提示请求也会记录。阅读位置需要你主动确认，打开课件不会被算作学完。
+
+只想获得阅读任务时明确说“这次只做阅读导航”。服务命令：`/lesson status` 查看地址，`/lesson stop` 停止，`/lesson 001-topic.json` 重新打开已有课件。退出或切换 Pi session 后服务会停止。
+
+远程 Linux 上运行 Pi 时，假设返回端口为 43210，在 Mac 用 `ssh -L 43210:127.0.0.1:43210 <主机>` 转发，再打开 `http://127.0.0.1:43210`。不要把服务暴露到公网。两台 Mac 同步课件和课程文件即可，各自在本机开启页面；不要同时写同一门课程的 Markdown 状态。
 
 ### `/learn-modern [section]`
 
@@ -258,19 +265,19 @@ Pi 只会根据当前 session 中已经完成并验证的工作更新：
 ```text
 你：/learn chapter 5
 
-Pi：阅读 material/ch05.md §5.1–§5.3。
+Pi：为 material/ch05.md §5.1–§5.3 生成小课件，返回本机 URL。
     目标：理解 List representation 如何隐藏实现。
-    注意：List_T 的定义、客户端能看到什么、分配发生在哪里。
+    页面：原文、List_T 的辅助图解和一个预测题。
 
-你：阅读原文、查看源码、运行例子。
+你：打开 Pi 给出的 HTML 页，对照原文和讲解，提交自己的解释。
 
-你：/check
+Pi：自动保存作答、核对原文，并把具体反馈返回到页面。
 
-Pi：显示一道三个选项的核心区别题，并等待选择。
+你：根据反馈尝试一个变式，必要时点击提示。
 
-你：选择一个答案。
+Pi：区分有提示练习与独立应用，自动更新 PROGRESS 和下一步。
 
-Pi：用几句话解释关键区别，再给最多一到两道短题。
+你：在外部编辑器完成实现后，告诉 Pi 文件位置让它检查。
 
 Pi：记录 recognition evidence，并把下一步指向 Discussion、Homework
     或一个真实的实现任务。
@@ -279,7 +286,7 @@ Pi：记录 recognition evidence，并把下一步指向 Discussion、Homework
 
 Pi：区分书中设计与外部资料，完成比较后回到下一节。
 
-你：/checkpoint
+你：/checkpoint （可选）
 
 Pi：写入本次可验证证据，并只留下一个下一步。
 ```
@@ -315,6 +322,8 @@ Pi：写入本次可验证证据，并只留下一个下一步。
 | `CONCEPTS.md` | 共享 | 稀疏的跨章节、跨课程连接。 |
 | `concepts/` | 你 | 你主动写的长期知识笔记。 |
 | `sessions/` | Pi | 简短 session 状态，不是聊天全文。 |
+| `lessons/` | Pi | 基于原文的小课件 JSON，由本机服务渲染成 HTML。 |
+| `learning/` | 运行时 | 课件版本、原文哈希、作答/提示事件和评估反馈。 |
 
 `PROGRESS.md` 使用四种状态：
 
@@ -353,7 +362,7 @@ Pi ───────读取/编辑──┘
 2. 15～25 分钟：自己阅读、推导、运行或实现。
 3. `/check`：完成两到三道低负担选择题，加深对核心区别的印象。
 4. 用课程习题、证明、测试或实现任务完成真实巩固。
-5. `/checkpoint`：保存本次真实证据和下一步。
+5. 页面作答后自动保存证据并请求 Pi 更新状态；`/checkpoint` 仅按需补充或收尾。
 6. 隔天或隔几天用 `/review` 做 retrieval practice。
 7. 把有意思但不紧急的问题留在 `QUESTIONS.md`。
 
@@ -400,9 +409,13 @@ pi --offline --no-session --verbose
 
 要求它按 `Material / Mentor analysis / External context` 三层重新回答。需要离开原文时显式使用 `/explore`。
 
+### 作答保存了，但没有反馈
+
+先确认 Pi 正在运行且模型请求正常。证据写盘和 AI 评估是两步；模型失败时答案不会丢失，下次课程对话会检查未评估记录。页面等待反馈最多约六分钟，之后可回 Pi 查看。服务已关闭时不要关掉尚未提交的页面，先保留文字，再重新打开课件。
+
 ### 进度记录和实际情况不一致
 
-Markdown 是最终状态。直接在 Obsidian 修正 `PROGRESS.md` 或 `COURSE.md`，下一次 Pi 会读取修正后的内容。
+告诉 Pi 哪条判断不准确，让它对照 `learning/events/` 的作答证据修正；也可以直接在 Obsidian 修正。外部练习需要主动提交结果或文件位置。页面不会监控 Obsidian、终端或阅读器，也不会把阅读时长当成掌握证据。
 
 ### Pi 提示 material 受到保护
 

@@ -16,7 +16,7 @@ function isDirectory(path: string): boolean {
   }
 }
 
-function findCourseRoot(start: string): string | undefined {
+export function findCourseRoot(start: string): string | undefined {
   let current = resolve(start);
 
   for (let depth = 0; depth < 8; depth += 1) {

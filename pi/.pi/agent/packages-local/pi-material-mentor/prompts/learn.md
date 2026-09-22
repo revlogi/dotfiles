@@ -1,5 +1,5 @@
 ---
-description: Orient the next material-first learning chunk without pre-teaching it
+description: Build a source-grounded interactive lesson with automatic learning feedback
 argument-hint: "[section]"
 ---
 Load and follow the `material-mentor` skill. Work in **Learn** mode for the course in the current directory.

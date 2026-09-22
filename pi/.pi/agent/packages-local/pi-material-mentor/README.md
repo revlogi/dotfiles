@@ -1,10 +1,12 @@
 # Pi Material Mentor
 
 A local Pi package for material-first courses. It provides the
-`material-mentor` and `youtube-transcript` skills, six learning prompts,
-interactive questions, course-state injection, and material write protection.
+`material-mentor` and `youtube-transcript` skills, learning prompts including
+`/teach`, source-grounded HTML lessons with automatic answer/feedback exchange,
+evidence-based course state, and material write protection.
 
-Course data remains outside this package in ordinary Markdown files. See
+Course data remains outside this package: readable Markdown state and immutable
+JSON lesson/evidence files. The browser service is local and session-scoped. See
 [`docs/usage.md`](docs/usage.md) for the workflow and state ownership rules.
 
 ## Development

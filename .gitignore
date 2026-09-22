@@ -44,3 +44,8 @@ nvim/.config/nvim/spell/
 *.crt
 gh/.config/gh/hosts.yml
 hammerspoon/.hammerspoon/config.lua
+
+# Syncthing machine-local metadata
+/.stfolder/
+/.stversions/
+/.stignore

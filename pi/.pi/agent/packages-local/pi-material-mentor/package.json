@@ -7,7 +7,8 @@
   "pi": {
     "extensions": [
       "./extensions/ask-user.ts",
-      "./extensions/learning-workspace.ts"
+      "./extensions/learning-workspace.ts",
+      "./extensions/interactive-lessons.ts"
     ],
     "skills": [
       "./skills/material-mentor",

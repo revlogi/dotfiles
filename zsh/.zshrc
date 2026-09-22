@@ -137,6 +137,8 @@ alias ll="eza -lah"
 alias lt="eza --tree --level=2"
 alias lg="eza -lah --git"
 
+alias tt="tmux a -t 0"
+
 # Core Aliases
 alias o='pi'
 alias ff='fastfetch'

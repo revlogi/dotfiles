@@ -1,0 +1,228 @@
+#!/usr/bin/env bash
+# Small entry point for this Stow repository. Compatible with macOS Bash 3.2.
+set -u
+
+usage() {
+  cat <<'HELP'
+Usage: dot edit <tool> | dot reload <tool> | dot check [group] | dot help
+
+Edit:   zsh, tmux, nvim, kitty, pi, hammerspoon, brew, docs
+Reload: tmux (live); other tools print instructions
+Check:  all (default), sync, links, stow, zsh, nvim, pi
+
+Checks report PASS / FAIL / SKIP. Exit 1 means a check failed; 2 means
+invalid usage. SKIP means unverified, not passed. No dependencies are installed.
+The repository is resolved through this script's symlink, or DOTFILES_ROOT.
+VISUAL / EDITOR may contain a command and simple whitespace-separated flags.
+HELP
+}
+
+fail() { printf 'dot: %s\n' "$*" >&2; exit 2; }
+
+# Follow Stow links without GNU readlink -f (unavailable on stock macOS).
+script=${BASH_SOURCE[0]}
+while [ -L "$script" ]; do
+  base=$(cd -P "$(dirname "$script")" && pwd) || exit 1
+  script=$(readlink "$script") || exit 1
+  case "$script" in /*) ;; *) script=$base/$script ;; esac
+done
+root=${DOTFILES_ROOT:-$(cd -P "$(dirname "$script")/../../.." && pwd)}
+[ -f "$root/README.md" ] && [ -d "$root/nvim" ] || fail 'Cannot locate dotfiles; set DOTFILES_ROOT.'
+
+edit_config() {
+  case "$1" in
+    zsh) file=zsh/.zshrc ;;
+    tmux) file=tmux/.tmux.conf ;;
+    nvim) file=nvim/.config/nvim/init.lua ;;
+    kitty) file=kitty/.config/kitty/kitty.conf ;;
+    pi) file=pi/.pi/agent/settings.json ;;
+    hammerspoon) file=hammerspoon/.hammerspoon/init.lua ;;
+    brew) file=Brewfile ;;
+    docs) file=README.md ;;
+    *) fail "Unknown edit target: $1 (see dot help)" ;;
+  esac
+  local editor
+  local -a editor_args
+  editor=${VISUAL:-${EDITOR:-nvim}}
+  # Deliberately no eval: editor flags are words, not shell code.
+  read -r -a editor_args <<< "$editor"
+  [ "${#editor_args[@]}" -gt 0 ] || fail 'Empty editor command.'
+  command -v "${editor_args[0]}" >/dev/null || fail "Editor not found: ${editor_args[0]}"
+  exec "${editor_args[@]}" "$root/$file"
+}
+
+reload_config() {
+  case "$1" in
+    tmux)
+      command -v tmux >/dev/null || fail 'tmux is not installed.'
+      tmux list-sessions >/dev/null 2>&1 || { printf 'SKIP tmux: no accessible running server.\n'; return 0; }
+      tmux source-file "$root/tmux/.tmux.conf" || return 1
+      printf 'PASS tmux: configuration reloaded in the current server.\n'
+      ;;
+    zsh) printf 'Run `exec zsh` in the shell you want to reload.\n' ;;
+    nvim) printf 'Restart Neovim to load the complete configuration.\n' ;;
+    kitty) printf 'In Kitty, press Ctrl+Shift+F5 (or Ctrl+Cmd+, on macOS) to reload.\n' ;;
+    pi) printf 'Run /reload inside Pi; restart Pi if changing package dependencies.\n' ;;
+    hammerspoon) printf 'On macOS, choose Reload Config in the Hammerspoon menu.\n' ;;
+    *) fail "Unknown reload target: $1 (see dot help)" ;;
+  esac
+}
+
+passed=0 failed=0 skipped=0
+run_check() {
+  local label=$1
+  shift
+  if "$@" >"$scratch/output" 2>&1; then
+    printf 'PASS %s\n' "$label"
+    passed=$((passed + 1))
+  else
+    printf 'FAIL %s\n' "$label"
+    cat "$scratch/output"
+    failed=$((failed + 1))
+  fi
+}
+skip() { printf 'SKIP %s\n' "$*"; skipped=$((skipped + 1)); }
+
+check_sync() {
+  run_check 'Syncthing local ignore entry' grep -Fxq '#include sync-ignore.txt' "$root/.stignore"
+  run_check 'Syncthing shared ignore rules' test -s "$root/sync-ignore.txt"
+  # Do not follow symlinks or descend into private state and dependencies.
+  find "$root" \( -name .git -o -name node_modules -o -name .venv -o -name .stversions \
+    -o -path "$root/pi/.pi/agent/sessions" -o -path "$root/pi/.pi/agent/npm" \
+    -o -path "$root/pi/.pi/agent/git" \) -prune -o -name '*sync-conflict-*' -print > "$scratch/conflicts"
+  if [ -s "$scratch/conflicts" ]; then
+    printf 'FAIL Syncthing conflicts (resolve before loading configuration):\n'
+    cat "$scratch/conflicts"
+    failed=$((failed + 1))
+  else
+    run_check 'No Syncthing conflict copies' test ! -s "$scratch/conflicts"
+  fi
+  if command -v syncthing >/dev/null; then
+    run_check 'Syncthing service reachable' syncthing cli show config-status
+  else
+    skip 'Syncthing service: binary not installed'
+  fi
+}
+
+check_links() {
+  local relative target
+  for relative in zsh/.zshrc zsh/.zshenv tmux/.tmux.conf nvim/.config/nvim/init.lua dot/.local/bin/dot; do
+    target="$HOME/${relative#*/}"
+    run_check "Deployed source: $target" test "$target" -ef "$root/$relative"
+  done
+  if [ "$(uname -s)" = Darwin ] && [ -z "${SSH_CONNECTION:-}" ]; then
+    run_check 'Karabiner directory symlink' test -L "$HOME/.config/karabiner"
+    run_check 'Karabiner target exists' test -f "$HOME/.config/karabiner/karabiner.json"
+  fi
+  if [ -d "$HOME/.pi/agent" ]; then
+    run_check 'Pi agent directory is local' test ! -L "$HOME/.pi/agent"
+    run_check 'Pi parent directory is local' test ! -L "$HOME/.pi"
+  fi
+}
+
+check_stow() {
+  command -v stow >/dev/null || { skip 'Stow: install GNU Stow to check deployment'; return; }
+  local -a packages
+  local profile
+  if [ -n "${SSH_CONNECTION:-}" ]; then
+    profile=server; packages=(dot zsh nvim tmux)
+  elif [ "$(uname -s)" = Darwin ]; then
+    profile=macOS; packages=(dot zsh nvim tmux vim kitty gh hammerspoon karabiner pi)
+  elif [ -f /etc/fedora-release ]; then
+    profile=Fedora; packages=(dot fedora kde input-remapper zsh nvim tmux vim kitty gh)
+  else
+    profile=server; packages=(dot zsh nvim tmux)
+  fi
+  run_check "Stow deployment conflicts ($profile; dry run only)" \
+    stow --simulate --no-folding --dir "$root" --target "$HOME" "${packages[@]}"
+}
+
+check_zsh() {
+  command -v zsh >/dev/null || { skip 'Zsh syntax: zsh is not installed'; return; }
+  local file
+  for file in "$root/zsh/.zshenv" "$root/zsh/.zshrc" "$root/zsh/.config/zsh/"*.zsh; do
+    [ -f "$file" ] || continue
+    run_check "Zsh syntax: ${file#"$root/"}" zsh -n "$file"
+  done
+  run_check 'dot Bash syntax' bash -n "$root/dot/.local/bin/dot"
+}
+
+check_nvim() {
+  if command -v stylua >/dev/null; then
+    run_check 'Neovim formatting' stylua --check "$root/nvim/.config/nvim"
+  else
+    skip 'Neovim formatting: stylua is not installed'
+  fi
+  if ! command -v nvim >/dev/null; then
+    skip 'Neovim startup: nvim is not installed'
+  elif [ ! -d "${XDG_DATA_HOME:-$HOME/.local/share}/nvim/lazy/lazy.nvim" ]; then
+    skip 'Neovim startup: initialize Neovim plugins first (see README Bootstrap)'
+  else
+    # Use repository config, installed plugins, and disposable state/cache.
+    # Startup errors can otherwise still exit zero with +qa.
+    run_check 'Neovim startup (repository config, installed plugins)' env \
+      XDG_CONFIG_HOME="$root/nvim/.config" XDG_STATE_HOME="$scratch/state" \
+      XDG_CACHE_HOME="$scratch/cache" NVIM_APPNAME=nvim \
+      nvim --headless --cmd 'lua
+        local root = vim.env.XDG_CONFIG_HOME .. "/nvim"
+        local lock = vim.json.decode(table.concat(vim.fn.readfile(root .. "/lazy-lock.json"), "\n"))
+        for name in pairs(lock) do
+          if not vim.uv.fs_stat(vim.fn.stdpath("data") .. "/lazy/" .. name) then
+            io.stderr:write("Missing plugin: " .. name .. "; run Bootstrap before checking.\n")
+            vim.cmd("cquit 1")
+          end
+        end' '+lua if vim.v.errmsg ~= "" then vim.cmd("cquit 1") end' +qa
+  fi
+}
+
+check_pi() {
+  if ! command -v npm >/dev/null || ! command -v bun >/dev/null; then
+    skip 'Pi: npm and bun are required'; return
+  fi
+  local dir agent_dir
+  agent_dir="$root/pi/.pi/agent"
+  # Stow leaves node_modules local; validate the deployed package when it
+  # actually points at this checkout, otherwise check the source directly.
+  if [ "$HOME/.pi/agent/package.json" -ef "$agent_dir/package.json" ]; then
+    agent_dir="$HOME/.pi/agent"
+  fi
+  for dir in "$agent_dir" "$agent_dir/packages-local/"*; do
+    [ -f "$dir/package.json" ] || continue
+    if [ ! -x "$dir/node_modules/.bin/tsc" ]; then
+      skip "Pi ${dir#"$root/"}: development dependencies missing; run npm ci in this directory"
+    else
+      run_check "Pi ${dir#"$root/"}: typecheck and tests" npm --prefix "$dir" run check
+    fi
+  done
+}
+
+command_name=${1:-help}
+case "$command_name" in
+  help|-h|--help) [ "$#" -le 1 ] || fail 'Too many arguments.'; usage ;;
+  edit|reload)
+    [ "$#" -eq 2 ] || fail "Usage: dot $command_name <tool>"
+    if [ "$command_name" = edit ]; then edit_config "$2"; else reload_config "$2"; fi
+    ;;
+  check)
+    [ "$#" -le 2 ] || fail 'Usage: dot check [all|sync|links|stow|zsh|nvim|pi]'
+    group=${2:-all}
+    case "$group" in all|sync|links|stow|zsh|nvim|pi) ;; *) fail "Unknown check group: $group" ;; esac
+    scratch=$(mktemp -d "${TMPDIR:-/tmp}/dot-check.XXXXXX") || exit 1
+    trap 'rm -rf "$scratch"' EXIT
+    trap 'exit 130' INT
+    trap 'exit 143' TERM
+    if [ "$group" = all ]; then
+      check_sync; check_links; check_stow; check_zsh
+      if [ -s "$scratch/conflicts" ]; then
+        skip 'Neovim and Pi execution: resolve configuration conflicts first'
+      else
+        check_nvim; check_pi
+      fi
+    else
+      "check_$group"
+    fi
+    printf '\nChecks: %s passed, %s failed, %s skipped.\n' "$passed" "$failed" "$skipped"
+    [ "$failed" -eq 0 ]
+    ;;
+  *) fail "Unknown command: $command_name (see dot help)" ;;
+esac
