@@ -20,11 +20,11 @@ local function setup()
   end
 
   vim.api.nvim_create_autocmd('FileType', {
-    pattern = { 'swift', 'objc', 'objcpp' },
+    pattern = { 'swift' },
     callback = start_lsp,
   })
 
-  if vim.tbl_contains({ 'swift', 'objc', 'objcpp' }, vim.bo.filetype) then
+  if vim.tbl_contains({ 'swift' }, vim.bo.filetype) then
     start_lsp()
   end
 end

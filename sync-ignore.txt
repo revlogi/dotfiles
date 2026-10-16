@@ -44,6 +44,10 @@ venv
 /nvim/.config/nvim/test.sh
 /nvim/.config/nvim/.luarc.json
 /nvim/.config/nvim/nvim
+// tmux plugins and saved sessions stay machine-local.
+/tmux/.tmux/plugins
+/tmux/.tmux/resurrect
+/tmux/.local/state/tmux
 // Only known source roots are shared. Add new roots explicitly.
 !/dot
 !/dot/**
@@ -65,6 +69,7 @@ venv
 !/hammerspoon/**
 !/karabiner
 !/karabiner/**
+// Retired roots stay allowed until deletions have reached every peer.
 !/fedora
 !/fedora/**
 !/kde

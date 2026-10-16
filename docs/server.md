@@ -43,7 +43,7 @@ and tmux selects that zsh as its default shell for SSH sessions.
 Only deploy the portable packages:
 
 ```bash
-stow -t ~ zsh nvim tmux
+stow -t ~ dot zsh nvim tmux
 ```
 
 Do not deploy `kitty`, `hammerspoon`, `gh`, or the macOS Brewfile on the server.
@@ -58,7 +58,7 @@ Keep the following directories local to each machine:
 ```
 
 The environment provides ripgrep, fd, clangd, clang-format,
-lua-language-server, stylua, and the tree-sitter CLI. The official archive
+stylua (for checking the dotfiles source), and the tree-sitter CLI. The official archive
 provides Neovim. Mason only installs a remote tool when no executable is already
 available; installer concurrency is limited to two.
 
@@ -87,7 +87,7 @@ TRITON_INTERPRET=1 python main.py
 
 Real CUDA execution and profiling belong on a temporary GPU machine.
 
-## C, C++, And CUDA
+## C And C++
 
 Prefer an administrator or module-provided clangd when one becomes available.
 Mason is the user-local fallback. Generate the compilation database per project:

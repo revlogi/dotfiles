@@ -4,6 +4,21 @@
             "complex_modifications": {
                 "rules": [
                     {
+                        "description": "Left ctrl + period to backspace",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "period",
+                                    "modifiers": {
+                                        "mandatory": ["left_control"]
+                                    }
+                                },
+                                "to": [{ "key_code": "delete_or_backspace" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "Left ctrl + hjkl to arrow keys Vim",
                         "manipulators": [
                             {

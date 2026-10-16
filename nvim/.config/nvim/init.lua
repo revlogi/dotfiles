@@ -2,6 +2,9 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+-- Treat .v files as Verilog, including empty or unfinished modules.
+vim.g.filetype_v = 'verilog'
+
 local platform = require 'custom.platform'
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
@@ -109,7 +112,7 @@ vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' }
 
 -- Open oil file explorer
 vim.keymap.set('n', '-', '<CMD>Oil --float<CR>', { desc = 'Open parent directory' })
-vim.keymap.set('n', '<leader>e', '<CMD>Oil<CR>', { desc = 'Open current directory' })
+vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show floating diagnostics' })
 
 -- TIP: Disable arrow keys in normal mode
 -- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
@@ -145,16 +148,12 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 -- path. Use :AutoSaveToggle or :AutoSaveStatus to control and inspect it.
 require('custom.autosave').setup()
 
-vim.filetype.add {
-  extension = {
-    cu = 'cuda',
-    cuh = 'cuda',
-  },
-}
+-- Check unsaved Zsh buffers with Zsh's own parser, without executing them.
+require('custom.zsh').setup()
 
--- Set 4-space indentation for C/C++/CUDA files
+-- Set 4-space indentation for C/C++ files
 vim.api.nvim_create_autocmd('FileType', {
-  pattern = { 'c', 'cpp', 'cuda' },
+  pattern = { 'c', 'cpp' },
   callback = function()
     vim.opt_local.shiftwidth = 4
     vim.opt_local.tabstop = 4
@@ -174,7 +173,7 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
--- Set 2-space indentation for Lua files (community standard)
+-- Lua uses two-space indentation, including this configuration.
 vim.api.nvim_create_autocmd('FileType', {
   pattern = { 'lua' },
   callback = function()
@@ -229,3 +228,16 @@ require('lazy').setup({
 -- Having longer updatetime (default is 4000 ms = 4s) leads to noticeable
 -- delays and poor user experience
 vim.opt.updatetime = 300
+
+-- Match Ormolu's two-space indentation while typing Haskell.
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { 'haskell', 'lhaskell' },
+  callback = function()
+    vim.opt_local.tabstop = 2
+    vim.opt_local.vartabstop = ''
+    vim.opt_local.varsofttabstop = ''
+    vim.opt_local.shiftwidth = 2
+    vim.opt_local.softtabstop = 2
+    vim.opt_local.expandtab = true
+  end,
+})

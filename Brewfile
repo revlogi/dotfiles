@@ -1,13 +1,16 @@
 # Install or reconcile this manifest with `brew bundle`.
 
 tap "narugit/tap"   # smctemp
+tap "oven-sh/bun"
 
 # Development
 brew "git"
 brew "gcc"
 brew "make"
 brew "cmake"
+brew "ispc" # CS149 SIMD programming
 brew "node"
+brew "oven-sh/bun/bun" # Pi extension tests
 brew "pnpm"
 brew "openjdk"
 brew "zig"
@@ -34,6 +37,7 @@ brew "wget"
 brew "mole"
 brew "tldr"
 brew "bat"
+brew "glow"
 brew "eza"
 brew "gh"
 brew "lazygit"

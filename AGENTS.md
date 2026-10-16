@@ -3,7 +3,7 @@
 ## Scope
 
 - This repository is deployed with GNU Stow; preserve paths relative to the target home directory.
-- Keep configuration portable across macOS, Fedora, and remote Linux unless a file is explicitly platform-specific.
+- Keep configuration portable across macOS and remote Linux unless a file is explicitly platform-specific.
 - Preserve unrelated working-tree changes. Never discard or rewrite them while completing another task.
 
 ## Safety

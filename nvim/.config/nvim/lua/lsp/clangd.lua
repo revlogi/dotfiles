@@ -8,6 +8,7 @@ end
 
 return {
   cmd = cmd,
+  filetypes = { 'c', 'cpp' },
   capabilities = lsp_utils.get_capabilities(),
   on_attach = function(client, bufnr)
     client.server_capabilities.documentFormattingProvider = false

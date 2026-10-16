@@ -1,3 +1,0 @@
-# 0.11.7 retains Python 3.9 support for the macOS system-Python fallback.
-pdfplumber==0.11.7
-pypdf==6.14.2

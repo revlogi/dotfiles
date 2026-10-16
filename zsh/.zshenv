@@ -2,6 +2,8 @@
 typeset -U path PATH
 
 path=(
+  "$HOME/.ghcup/bin"
+  "$HOME/.cabal/bin"
   "$HOME/.local/bin"
   "$HOME/.local/opt/dev-tools/bin"
   "$HOME/.bun/bin"

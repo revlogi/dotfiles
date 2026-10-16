@@ -12,12 +12,16 @@ return {
     local platform = require 'custom.platform'
 
     local package_executables = {
-      lua_ls = 'lua-language-server',
-      ts_ls = 'typescript-language-server',
       jsonls = 'vscode-json-language-server',
-      basedpyright = 'basedpyright-langserver',
+      html = 'vscode-html-language-server',
+      cssls = 'vscode-css-language-server',
+      bashls = 'bash-language-server',
+      lua_ls = 'lua-language-server',
       vimls = 'vim-language-server',
-      openscad_lsp = 'openscad-lsp',
+      ts_ls = 'typescript-language-server',
+      basedpyright = 'basedpyright-langserver',
+      slang_server = 'slang-server',
+      verible = 'verible-verilog-format',
     }
 
     local function missing_packages(packages)
@@ -32,27 +36,35 @@ return {
     end
 
     local servers = {
-      'lua_ls',
-      'ts_ls',
       'jsonls',
+      'html',
+      'cssls',
+      'bashls',
+      'lua_ls',
+      'vimls',
+      'ts_ls',
       'basedpyright',
       'ruff',
-      'vimls',
       'clangd',
+      'slang_server',
     }
 
-    if vim.fn.executable 'openscad-lsp' == 1 or vim.fn.executable 'cargo' == 1 then
-      servers[#servers + 1] = 'openscad_lsp'
-    end
-
-    if vim.fn.executable 'zls' == 1 then
-      servers[#servers + 1] = 'zls'
+    -- HLS must match the project's GHC; install it with GHCup, not Mason.
+    if vim.fn.executable 'haskell-language-server-wrapper' == 1 then
+      vim.lsp.config('hls', {
+        capabilities = lsp_utils.get_capabilities(),
+        settings = { haskell = { formattingProvider = 'ormolu' } },
+      })
+      vim.lsp.enable 'hls'
     end
 
     local tools = {
+      'shfmt',
+      'shellcheck',
       'stylua',
       'clang-format',
       'prettierd',
+      'verible',
     }
 
     local mason_servers = missing_packages(servers)
@@ -74,7 +86,10 @@ return {
       local config = {
         capabilities = lsp_utils.get_capabilities(),
       }
-      local has_custom_config, custom_config = pcall(require, 'lsp.' .. server_name)
+      local has_custom_config, custom_config = pcall(require, 'lsp.overrides.' .. server_name)
+      if not has_custom_config then
+        has_custom_config, custom_config = pcall(require, 'lsp.' .. server_name)
+      end
       if has_custom_config then
         config = vim.tbl_deep_extend('force', config, custom_config)
       end

@@ -14,7 +14,6 @@
   ],
   "packages": [
     "./packages-local/pi-engineering-workflow",
-    "./packages-local/pi-teach",
     "./packages-local/pi-anki-english",
     "npm:@sherif-fanous/pi-catppuccin@0.2.0",
     {
@@ -68,5 +67,6 @@
   ],
   "skills": [
     "-skills/README.md"
-  ]
+  ],
+  "hideThinkingBlock": false
 }

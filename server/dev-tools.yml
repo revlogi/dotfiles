@@ -12,6 +12,5 @@ dependencies:
   - zoxide
   - eza
   - clang-tools
-  - lua-language-server
   - stylua
   - tree-sitter-cli

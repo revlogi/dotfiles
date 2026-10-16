@@ -1,3 +1,16 @@
+-- Ordinary Haskell uses standalone Ormolu; literate Haskell still uses HLS.
+local function lsp_format(bufnr)
+  local ft = vim.bo[bufnr or 0].filetype
+  return (ft == 'lhaskell') and 'prefer' or 'never'
+end
+
+local function format_timeout(bufnr)
+  if vim.bo[bufnr or 0].filetype == 'haskell' then
+    return 10000
+  end
+  return lsp_format(bufnr) == 'prefer' and 30000 or 3000
+end
+
 return {
   'stevearc/conform.nvim',
   event = { 'BufWritePre' },
@@ -6,7 +19,7 @@ return {
     {
       '<leader>f',
       function()
-        require('conform').format { async = true, timeout_ms = 3000, lsp_format = 'never' }
+        require('conform').format { async = true, timeout_ms = format_timeout(), lsp_format = lsp_format() }
       end,
       mode = '',
       desc = '[F]ormat buffer',
@@ -14,11 +27,11 @@ return {
   },
   opts = {
     notify_on_error = true,
-    notify_no_formatters = false,
+    notify_no_formatters = true,
     format_on_save = function(bufnr)
       return {
-        timeout_ms = 3000,
-        lsp_format = 'never',
+        timeout_ms = format_timeout(bufnr),
+        lsp_format = lsp_format(bufnr),
       }
     end,
     formatters = {
@@ -35,22 +48,31 @@ return {
         end,
         stdin = true,
       },
+      verible = {
+        prepend_args = { '--indentation_spaces=4', '--column_limit=120' },
+      },
     },
     formatters_by_ft = {
+      haskell = { 'ormolu' },
+      json = { 'prettierd' },
+      jsonc = { 'prettierd' },
+      -- shfmt supports POSIX/Bash; never apply it to Zsh.
+      sh = { 'shfmt' },
+      bash = { 'shfmt' },
       lua = { 'stylua' },
+      html = { 'prettierd' },
+      css = { 'prettierd' },
+      markdown = { 'prettierd' },
       python = { 'ruff_format' },
       c = { 'clang-format' },
       cpp = { 'clang-format' },
-      cuda = { 'clang-format' },
-      zig = { 'zigfmt' },
       swift = { 'swiftformat' },
       javascript = { 'prettierd' },
       javascriptreact = { 'prettierd' },
       typescript = { 'prettierd' },
       typescriptreact = { 'prettierd' },
-      json = { 'prettierd' },
-      css = { 'prettierd' },
-      html = { 'prettierd' },
+      verilog = { 'verible' },
+      systemverilog = { 'verible' },
     },
   },
 }

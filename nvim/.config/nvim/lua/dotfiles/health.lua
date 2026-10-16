@@ -8,7 +8,7 @@ local function check_version()
 end
 
 local function check_external_requirements()
-  for _, executable in ipairs { 'git', 'make', 'unzip', 'rg' } do
+  for _, executable in ipairs { 'git', 'make', 'unzip', 'rg', 'node', 'npm', 'tree-sitter', 'zsh' } do
     if vim.fn.executable(executable) == 1 then
       vim.health.ok('Found ' .. executable)
     else

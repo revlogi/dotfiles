@@ -106,7 +106,6 @@ zsh -ilc exit
 ~/.tmux/plugins/tpm/bin/install_plugins
 nvim --headless "+Lazy! sync" +qa
 npm --prefix ~/.pi/agent ci
-npm --prefix ~/.pi/agent/packages-local/pi-material-mentor ci
 npm --prefix ~/.pi/agent/packages-local/pi-anki-english ci
 ```
 
