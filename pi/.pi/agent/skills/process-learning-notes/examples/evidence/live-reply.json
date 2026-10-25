@@ -1,0 +1,17 @@
+[
+  {
+    "questionItemId": "[\"request_user_input_async\",\"call_87e877fb2c5947688aef566bd96fe942\",0]",
+    "question": "Q-B1（针对你提供的 Blelloch 历史回答的一次追问）：对数组 [3,1,2,4]，Upsweep 后左子树总和为 4、右子树总和为 6。Downsweep 从根前缀 0 开始：你会给右子树什么初始前缀？为什么？可以回答不知道或跳过。",
+    "answer": "4，右子树需要根结点的值加上左子树总和，即0+4"
+  },
+  {
+    "questionItemId": "[\"request_user_input_async\",\"call_87e877fb2c5947688aef566bd96fe942\",1]",
+    "question": "Q-F1：你的记录把 Maybe、IO、(->) r 列为 Functor。你当时凭什么共同特征把它们放在一起？请从最有直觉的一个实例说起，并指出哪个实例还不清楚。可以回答不记得或跳过。",
+    "answer": "它们都需要接受一个具体类型才能变成具体类型"
+  },
+  {
+    "questionItemId": "[\"request_user_input_async\",\"call_87e877fb2c5947688aef566bd96fe942\",2]",
+    "question": "Q-C1：你记录了 cudaMalloc → cudaMemcpy → kernel(async) → cudaMemcpy → cudaFree。当时你依据什么判断 host 已经能读取计算结果？请只说明你当时的判断；若没有想过同步问题，也可以直接说不知道或跳过。",
+    "answer": "调用kernel后再去调用cudaMemcpy的话，cudaMemcpy应该会等待kernel执行完吧"
+  }
+]
