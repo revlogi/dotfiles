@@ -2,6 +2,8 @@
 type: concept
 status: draft
 domain:
+mastery: partial
+last_reviewed:
 aliases: []
 tags: []
 sources: []

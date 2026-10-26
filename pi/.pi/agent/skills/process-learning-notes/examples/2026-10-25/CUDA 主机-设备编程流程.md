@@ -2,6 +2,8 @@
 type: concept
 status: draft
 domain: parallel-computing
+mastery: partial
+last_reviewed: 2026-10-25
 aliases: [CUDA Host-Device Workflow, CUDA 内存拷贝, CUDA 异步执行]
 tags: [cs149, cuda]
 sources: ["[[2026-10-25_09-21-10]]", "[[2026-10-25_09-22-47]]"]

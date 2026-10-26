@@ -2,6 +2,8 @@
 type: concept
 status: draft
 domain: algorithms
+mastery: partial
+last_reviewed:
 aliases: [Floyd Cycle Detection, 快慢指针, 龟兔赛跑, Tortoise and Hare]
 tags: [leetcode, linked-list]
 sources: ["[[2026-10-25_09-21-10]]", "[[2026-10-25_09-22-47]]"]

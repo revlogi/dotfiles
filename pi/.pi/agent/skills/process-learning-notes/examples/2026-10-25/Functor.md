@@ -2,6 +2,8 @@
 type: concept
 status: draft
 domain: haskell
+mastery: partial
+last_reviewed: 2026-10-25
 aliases: [函子, fmap]
 tags: [haskell, typeclass]
 sources: ["[[2026-10-25_09-21-10]]"]

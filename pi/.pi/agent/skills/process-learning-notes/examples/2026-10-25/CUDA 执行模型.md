@@ -2,6 +2,8 @@
 type: concept
 status: draft
 domain: parallel-computing
+mastery: partial
+last_reviewed:
 aliases: [CUDA Execution Model, CUDA 线程层级, SIMT]
 tags: [cs149, cuda]
 sources: ["[[2026-10-25_09-21-10]]"]

@@ -2,6 +2,8 @@
 type: concept
 status: draft
 domain: parallel-computing
+mastery: partial
+last_reviewed: 2026-10-25
 aliases: [流压缩, 并行筛选, Flag-Scan-Scatter]
 tags: [cs149, scan]
 sources: ["[[2026-10-25_09-22-47]]"]

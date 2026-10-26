@@ -14,7 +14,7 @@ from pathlib import Path
 
 NOISE = re.compile(r"\[C\d+\]|AI-supplemented|User-expressed|Learning State|用户回答|你记录了|用户已解释")
 META = re.compile(r"有助于|很重要|重要的概念|本笔记|本文")
-REQUIRED_FM = ["type: concept", "status: draft", "aliases:", "sources:", "domain:"]
+REQUIRED_FM = ["type: concept", "status: draft", "mastery:", "aliases:", "sources:", "domain:"]
 
 
 def norm(s: str) -> str:

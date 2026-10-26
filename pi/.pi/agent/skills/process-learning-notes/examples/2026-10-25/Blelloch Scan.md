@@ -2,6 +2,8 @@
 type: concept
 status: draft
 domain: parallel-computing
+mastery: partial
+last_reviewed: 2026-10-25
 aliases: [Blelloch 扫描, work-efficient scan, 工作高效前缀和]
 tags: [cs149, scan]
 sources: ["[[2026-10-25_09-22-47]]"]

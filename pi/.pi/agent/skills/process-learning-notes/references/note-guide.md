@@ -86,9 +86,14 @@ Core Idea 可以由 AI 综合可靠资料写成；它是否被用户掌握，只
 ## 7. 命名与 frontmatter
 
 - 文件名就是概念的常用名（例如 `Stream Compaction.md`、`极小多项式.md`）；另一种语言的名称和缩写放进 `aliases`，查找已有笔记依赖它。
-- `domain` 写学科（如 `parallel-computing`、`linear-algebra`、`haskell`、`algorithms`）；`tags` 可选。
+- `domain` 写学科（如 `parallel-computing`、`linear-algebra`、`haskell`、`algorithms`、`cpp`）；`tags` 可选。
+- `mastery` 根据“我的理解”自动计算：
+  - `shaky`：存在尚未纠正的 `✗`（曾有错误理解），或尚无任何自我解释记录；
+  - `partial`：无未解决的 `✗`，有至少一条 `✅` 或 `◐`，但仍有 `◐` 或 `❓` 待解决；
+  - `solid`：核心机制已有 `✅` 解释，且没有遗留的 `✗`、`◐` 或关键 `❓`。
+- `last_reviewed`：如果本轮用户回答了针对该概念的问题，填当天日期 `YYYY-MM-DD`；如果跳过了提问或仅从旧记录提炼而未回答问题，留空。
 - `sources` 写 flomo 原文件的 wikilink（`"[[2026-10-25_09-21-10]]"`）。
-- `status: draft`。用户审阅后自己改为 `reviewed`；本 Skill 不修改这个状态。
+- `status: draft`。用户审阅后自己改为 `reviewed`；整理模式不修改这个状态。
 
 ## 8. 定稿自检
 
