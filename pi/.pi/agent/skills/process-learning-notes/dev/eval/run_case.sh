@@ -33,7 +33,7 @@ case "$case_name" in
 esac
 
 if [ "$case_name" = merge ]; then find vault/30-Concepts -type f -exec shasum {} + > .before; fi
-model="${PI_MODEL:-openai/gpt-5.6-sol:medium}"
+model="${PI_MODEL:-openai/gpt-6.1-sol:medium}"
 start=$(date +%s)
 pi --model "$model" -p --no-session "/skill:process-learning-notes $prompt" > run.log 2>&1 || echo "pi exit $?" >> run.log
 echo "elapsed $(( $(date +%s) - start ))s" >> run.log

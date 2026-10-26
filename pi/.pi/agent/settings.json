@@ -2,14 +2,15 @@
   "compaction": {
     "enabled": true
   },
-  "lastChangelogVersion": "0.84.3",
+  "lastChangelogVersion": "1.4.0",
   "theme": "catppuccin-latte/catppuccin-mocha",
-  "defaultProvider": "openai-codex",
-  "defaultModel": "gpt-5.6-sol",
+  "defaultProvider": "openai",
+  "defaultModel": "gpt-6.1-sol",
   "defaultThinkingLevel": "medium",
   "enabledModels": [
-    "openai-codex/gpt-5.6-terra:low",
-    "openai-codex/gpt-5.6-sol:medium",
+    "openai/gpt-6.1-sol:medium",
+    "openai/gpt-5.6-sol:medium",
+    "openai/gpt-5.6-terra:low",
     "local-mlx//Users/liuguangxi/.local/share/qwen35-4b-uncensored-4bit"
   ],
   "packages": [
@@ -63,10 +64,19 @@
       ]
     },
     "npm:pi-vimmode@0.9.0",
-    "npm:pi-web-access"
+    "npm:pi-web-access",
+    {
+      "source": "npm:pi-ask-user@0.17.0",
+      "extensions": [
+        "index.ts"
+      ],
+      "skills": []
+    }
   ],
   "skills": [
     "-skills/README.md"
   ],
-  "hideThinkingBlock": false
+  "hideThinkingBlock": false,
+  "deviceId": "07deea63-c09e-4c2f-8400-d07849932be2",
+  "enableSkillCommands": true
 }
