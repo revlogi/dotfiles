@@ -66,6 +66,7 @@ return {
       python = { 'ruff_format' },
       c = { 'clang-format' },
       cpp = { 'clang-format' },
+      cuda = { 'clang-format' },
       swift = { 'swiftformat' },
       javascript = { 'prettierd' },
       javascriptreact = { 'prettierd' },

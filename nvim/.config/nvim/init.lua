@@ -5,6 +5,9 @@ vim.g.maplocalleader = ' '
 -- Treat .v files as Verilog, including empty or unfinished modules.
 vim.g.filetype_v = 'verilog'
 
+-- Keep CUDA sources and headers on the same language tooling.
+vim.filetype.add { extension = { cu = 'cuda', cuh = 'cuda' } }
+
 local platform = require 'custom.platform'
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
@@ -18,6 +21,12 @@ vim.g.have_nerd_font = true
 -- Show relative line numbers
 vim.o.number = true
 vim.o.relativenumber = true
+
+-- Default to four spaces; filetype-specific settings may override this.
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.softtabstop = 4
+vim.opt.expandtab = true
 
 -- Enable mouse mode
 vim.o.mouse = 'a'
@@ -179,6 +188,7 @@ vim.api.nvim_create_autocmd('FileType', {
   callback = function()
     vim.opt_local.shiftwidth = 2
     vim.opt_local.tabstop = 2
+    vim.opt_local.softtabstop = 2
     vim.opt_local.expandtab = true
     vim.opt_local.smartindent = true
   end,

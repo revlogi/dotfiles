@@ -109,7 +109,14 @@ npm --prefix ~/.pi/agent ci
 npm --prefix ~/.pi/agent/packages-local/pi-anki-english ci
 ```
 
-Pi 测试需要 Bun；没有时按其安装说明安装。Pi 登录、GitHub 登录、AnkiConnect 各机单独配置。不要从 mini 搬认证文件。
+`brew bundle` 已包含 Pi 测试所需的 Bun。认证和 AnkiConnect 各机单独配置，不要从 mini 搬认证文件：
+
+- GitHub CLI：运行 `gh auth login`。
+- Codex：运行 `codex`，首次启动时按提示选择支持的登录方式。
+- Pi：使用 `/login` 命令。
+- Neovim CodeCompanion：首次打开聊天时通过 ChatGPT 认证，详见[编辑器说明](editor.md#ai-chat)。
+
+凭据、会话、依赖、缓存和运行时状态均保留在本机，不参与同步。
 
 初始化可能更新 lockfile；如果 Air 因此提示本地修改，先比较差异，不直接丢弃。
 

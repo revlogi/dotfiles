@@ -1,0 +1,23 @@
+{
+  "name": "personal-snippets",
+  "contributes": {
+    "snippets": [
+      {
+        "language": ["c", "cpp"],
+        "path": "./c.json"
+      },
+      {
+        "language": "cpp",
+        "path": "./cpp.json"
+      },
+      {
+        "language": "python",
+        "path": "./python.json"
+      },
+      {
+        "language": "cuda",
+        "path": "./cuda.json"
+      }
+    ]
+  }
+}

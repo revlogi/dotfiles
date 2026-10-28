@@ -4,6 +4,30 @@ This repository uses shared configuration with small Linux and SSH profiles. Do
 not copy Neovim plugins, Mason packages, virtual environments, or caches from a
 Mac.
 
+## Standalone minimal tmux
+
+For a server that only needs familiar tmux keys, copy the standalone file from
+the repository root (this replaces the remote user's `~/.tmux.conf`):
+
+```bash
+scp server/tmux.conf user@host:~/.tmux.conf
+```
+
+Start `tmux` on the server, or apply it to an existing server with
+`tmux source-file ~/.tmux.conf`. Requires tmux 3.0+; no Stow, plugins, special
+fonts, or other dotfiles are needed.
+
+The prefix is `Ctrl-f`. It retains `i` for smart splitting, `"` / `%` for
+explicit splits, `c` for a new window in home, `s` / `w` for session/window
+selection, `r` for reload, and `K` for clearing history. Without a prefix,
+`Ctrl-h/j/k/l` selects tmux panes, Shift + arrows resizes them, and
+Alt + Shift + Left/Right moves windows. Copy mode uses `v`, `Ctrl-v`, and `y`;
+`Ctrl-f ]` pastes the tmux buffer. `Ctrl-f ?` or `Ctrl-f /` lists bindings.
+
+Navigation only switches tmux panes; it does not integrate with Vim/Neovim
+splits. Session recovery and the local cheatsheet popup are omitted.
+The portable terminal type is `screen-256color`.
+
 ## 806-dev Baseline
 
 - Ubuntu 24.04 LTS, x86_64

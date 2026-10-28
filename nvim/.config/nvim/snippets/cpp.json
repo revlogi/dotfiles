@@ -1,0 +1,20 @@
+{
+  "Range-based for loop": {
+    "prefix": "fore",
+    "body": [
+      "for (${1:const auto&} ${2:item} : ${3:items}) {",
+      "    $0",
+      "}"
+    ],
+    "description": "Iterate over a range by const reference"
+  },
+  "Lambda expression": {
+    "prefix": "lambda",
+    "body": [
+      "[${1}](${2}) {",
+      "    $0",
+      "}"
+    ],
+    "description": "Create a lambda expression with editable captures and parameters"
+  }
+}

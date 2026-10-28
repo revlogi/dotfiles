@@ -35,18 +35,20 @@ cheats() (
   cd "$root/docs/cheats" || exit 1
   local preview status
   if command -v glow >/dev/null; then
-    preview='glow --style dark --width "${FZF_PREVIEW_COLUMNS:-80}" -- {}'
+    # Preview subprocesses cannot reliably detect the terminal background.
+    # Use default body colors and accents from the terminal ANSI palette.
+    preview='glow --style ./terminal-style.json --width "${FZF_PREVIEW_COLUMNS:-80}" -- {}'
   elif command -v bat >/dev/null; then
-    preview='bat --color=always --style=plain --paging=never -- {}'
+    preview='bat --color=never --style=plain --paging=never -- {}'
   elif command -v batcat >/dev/null; then
-    preview='batcat --color=always --style=plain --paging=never -- {}'
+    preview='batcat --color=never --style=plain --paging=never -- {}'
   else
     preview='cat -- {}'
   fi
   # Ignore user fzf actions/options: this browser must remain read-only.
   unset FZF_DEFAULT_OPTS FZF_DEFAULT_OPTS_FILE FZF_DEFAULT_COMMAND
   export SHELL=/bin/sh
-  printf '%s\n' ./*.md | fzf --query="$*" --layout=reverse --border \
+  printf '%s\n' ./*.md | fzf --query="$*" --layout=reverse --border --color='bw,prompt:4,pointer:5,hl:4,hl+:4,info:6' \
     --prompt='Cheats > ' --header='Up/Down: select | Ctrl-d/u: scroll | Esc: close' \
     --preview="$preview" --preview-window='right,70%,wrap,<80(down,70%,wrap)' \
     --bind='ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up' >/dev/null
@@ -142,6 +144,7 @@ check_links() {
   if [ -d "$HOME/.pi/agent" ]; then
     run_check 'Pi agent directory is local' test ! -L "$HOME/.pi/agent"
     run_check 'Pi parent directory is local' test ! -L "$HOME/.pi"
+    run_check 'Pi settings use dotfiles source' test "$HOME/.pi/agent/settings.json" -ef "$root/pi/.pi/agent/settings.json"
   fi
 }
 

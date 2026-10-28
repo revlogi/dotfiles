@@ -1,0 +1,22 @@
+{
+  "CUDA global thread index": {
+    "prefix": "cuidx",
+    "body": ["int ${1:index} = blockIdx.x * blockDim.x + threadIdx.x;$0"],
+    "description": "Compute the 1D global thread index"
+  },
+  "CUDA global thread index y": {
+    "prefix": "cuidy",
+    "body": ["int ${1:index} = blockIdx.y * blockDim.y + threadIdx.y;$0"],
+    "description": "Compute the 2D global thread index y"
+  },
+  "CUDA global thread index of a 2D global thread": {
+    "prefix": "tid",
+    "body": ["int ${1:index} = blockIdx.y * blockDim.x + threadIdx.x;$0"],
+    "description": "Compute the 2D global thread index"
+  },
+  "CUDA bounds check": {
+    "prefix": "cubounds",
+    "body": ["if (${1:index} >= ${2:n}) return;$0"],
+    "description": "Return if the thread index is out of bounds"
+  }
+}

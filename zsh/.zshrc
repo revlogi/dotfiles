@@ -68,6 +68,51 @@ alias sz='exec zsh'
 alias nv='nvim'
 alias t='tmux'
 
+mkcd() {
+  mkdir -p -- "$1" && cd -- "$1"
+}
+
+sc() {
+  local dir
+  dir="$(mktemp -d)" || return
+  cd "$dir" || return
+  echo "Scratch directory: $dir"
+}
+
+port() {
+    lsof -nP -iTCP:"$1" -sTCP:LISTEN
+}
+
+# Git
+alias g='git init'
+alias gst='git status -sb'
+alias ga='git add .'
+alias gl='git log --oneline --graph --decorate -15'
+
+# Compile Aliases
+alias cc17='clang -std=c17 -O2 -Wall -Wextra'
+alias cdbg='clang -std=c17 -g -O0 -Wall -Wextra -fsanitize=address,undefined'
+alias cpp='clang++ -std=c++20 -O2 -Wall -Wextra'
+alias cppdbg='clang++ -std=c++20 -g -O0 -Wall -Wextra -fsanitize=address,undefined'
+
+cpprun() {
+  local src="$1"
+  local out="${src%.*}"
+
+  clang++ -std=c++20 -O2 -Wall -Wextra "$src" -o "$out" &&
+    "$([[ "$out" == /* ]] && echo "$out" || echo "./$out")"
+}
+
+crun() {
+  local src="$1"
+  local out="${src%.*}"
+
+  clang -std=c17 -O2 -Wall -Wextra "$src" -o "$out" &&
+    "$([[ "$out" == /* ]] && echo "$out" || echo "./$out")"
+}
+
+
+
 if (( ${+commands[zoxide]} )); then
   eval "$(zoxide init zsh)"
   alias cd='z'

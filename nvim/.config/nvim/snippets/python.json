@@ -1,0 +1,22 @@
+{
+  "Python main function": {
+    "prefix": "pymain",
+    "body": [
+      "def main():",
+      "    ${0:pass}",
+      "",
+      "",
+      "if __name__ == \"__main__\":",
+      "    main()"
+    ],
+    "description": "Define a main function with an entry-point guard"
+  },
+  "Enumerate loop": {
+    "prefix": "enum",
+    "body": [
+      "for ${1:i}, ${2:item} in enumerate(${3:items}):",
+      "    ${0:pass}"
+    ],
+    "description": "Iterate over indices and values with enumerate"
+  }
+}

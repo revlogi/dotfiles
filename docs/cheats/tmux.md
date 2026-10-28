@@ -67,3 +67,25 @@ Without a prefix: **Ctrl-h/j/k/l** navigates tmux / Neovim splits (plugin requir
 
 In copy mode: `v` starts selection, `Ctrl-v` toggles rectangle selection,
 and `y` copies and exits. Session snapshots restore layouts, not process memory.
+
+## Session recovery
+
+[tmux-resurrect](https://github.com/tmux-plugins/tmux-resurrect) saves sessions,
+windows, pane layouts, and working directories.
+[tmux-continuum](https://github.com/tmux-plugins/tmux-continuum) saves every
+15 minutes while tmux is active and restores on tmux server startup.
+
+- Save now: `Ctrl-f`, then `Ctrl-s`.
+- Restore manually: `Ctrl-f`, then `Ctrl-r`.
+- After a reboot, open a terminal and run `tmux`; the last snapshot restores.
+- On another machine, install the plugins using `Ctrl-f`, then uppercase `I`.
+
+Snapshots live in `~/.local/state/tmux/resurrect`, outside the synchronized
+repository. Pane contents are not captured. Keep the status bar enabled and
+Continuum last in the plugin list so automatic saving keeps working. Reloading
+configuration does not trigger automatic restore. Save manually before a planned
+shutdown to include changes since the last automatic save.
+
+Supported programs may be relaunched using Resurrect's default allowlist; this
+does not resume process memory, running jobs, or Neovim's internal buffer/session
+state. Existing tmux servers are not restarted by setup.

@@ -33,6 +33,7 @@ return {
       'jsonc',
       'c',
       'cpp',
+      'cuda',
       'python',
       'javascript',
       'javascriptreact',
@@ -55,6 +56,7 @@ return {
       'jsonc',
       'c',
       'cpp',
+      'cuda',
       'python',
       'javascript',
       'javascriptreact',
@@ -68,6 +70,9 @@ return {
       'css',
       'markdown',
     }
+
+    -- CUDA shares C++ syntax; reuse the C++ parser for highlighting and indentation.
+    vim.treesitter.language.register('cpp', 'cuda')
 
     -- JSON's grammar also accepts comments used by JSONC.
     vim.treesitter.language.register('json', 'jsonc')
