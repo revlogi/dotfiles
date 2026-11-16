@@ -1,18 +1,5 @@
-return {
-  'christoomey/vim-tmux-navigator',
-  cmd = {
-    'TmuxNavigateLeft',
-    'TmuxNavigateDown',
-    'TmuxNavigateUp',
-    'TmuxNavigateRight',
-    'TmuxNavigatePrevious',
-    'TmuxNavigatorProcessList',
-  },
-  keys = {
-    { '<c-h>', '<cmd><C-U>TmuxNavigateLeft<cr>' },
-    { '<c-j>', '<cmd><C-U>TmuxNavigateDown<cr>' },
-    { '<c-k>', '<cmd><C-U>TmuxNavigateUp<cr>' },
-    { '<c-l>', '<cmd><C-U>TmuxNavigateRight<cr>' },
-    { '<c-\\>', '<cmd><C-U>TmuxNavigatePrevious<cr>' },
-  },
-}
+vim.keymap.set('n', '<C-h>', '<cmd><C-U>TmuxNavigateLeft<CR>', { desc = 'Navigate left across Neovim and tmux panes' })
+vim.keymap.set('n', '<C-j>', '<cmd><C-U>TmuxNavigateDown<CR>', { desc = 'Navigate down across Neovim and tmux panes' })
+vim.keymap.set('n', '<C-k>', '<cmd><C-U>TmuxNavigateUp<CR>', { desc = 'Navigate up across Neovim and tmux panes' })
+vim.keymap.set('n', '<C-l>', '<cmd><C-U>TmuxNavigateRight<CR>', { desc = 'Navigate right across Neovim and tmux panes' })
+vim.keymap.set('n', '<C-\\>', '<cmd><C-U>TmuxNavigatePrevious<CR>', { desc = 'Navigate to the previous Neovim or tmux pane' })

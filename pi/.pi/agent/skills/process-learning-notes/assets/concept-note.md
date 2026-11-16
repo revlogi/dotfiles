@@ -9,34 +9,36 @@ tags: []
 sources: []
 created: YYYY-MM-DD
 ---
-# 概念名
+# Concept Name
 
 > [!abstract] Core Idea
-> 1–2 句：最关键的关系，说明“为什么”。
+> 1–2 sentences: the most important relationship, explaining why.
 
-## 机制
+## Mechanism
 
-<!-- 按 note-guide §4 选用模块：定义 / 触发信号 / 原理 / 例子 / 适用条件与陷阱 / 关联。空段删除，模块名可按内容调整。 -->
+<!-- Choose modules using note-guide §4: definition / trigger signals / principle / examples / applicability and pitfalls. Connections is always kept. Delete empty sections and adapt headings to the content. -->
 
-## 例子
+## Examples
 
-## 陷阱
+## Pitfalls
 
-## 关联
+## Connections
 
-- [[相关概念]]：具体联系是什么。
+<!-- Typed links (note-guide §4.1): relation first, then what specifically connects them. Aim for ≥ 2 genuine links. -->
+- **prerequisite** [[Concept Needed First]]: the specific step or idea this note relies on.
+- **contrasts with** [[Easily Confused Concept]]: the difference that resolves the confusion.
 
-## 我的理解
+## My Understanding
 
-- 💬「用户原话」（来源）
-  ✅/◐/✗ 一行评价。
-- ❓ 具体的待解决问题。
+- 💬 “Verbatim user statement” (source)
+  ✅/◐/✗ One-line assessment.
+- ❓ A specific unresolved question.
 
 ## Recall
 
-1. 重建机制或判断适用条件的问题。
+1. A question requiring reconstruction of the mechanism or a judgment about applicability.
 
-## 参考
+## References
 
-- 来源：[[flomo 原文件]] L行号
-- 外部资料：链接 — 用来核验什么
+- Source: [[original flomo file]] L<line-number>
+- External reference: link — what it verifies

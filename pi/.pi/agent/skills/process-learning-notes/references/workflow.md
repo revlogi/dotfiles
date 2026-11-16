@@ -1,162 +1,241 @@
-# Workflow：分诊、提问与评估
+# Workflow: Triage, Linking, Questions, Review, and Maps
+
+Use the English labels below for new records; recognize their legacy Chinese equivalents listed in `SKILL.md` when reading or updating existing records. Preserve existing note headings and verbatim learner evidence.
 
 ## 1. TRIAGE
 
-### 1.1 拆条目与去重
+### 1.1 Split Items and Deduplicate
 
-如果 Sources 来自 `00-Inbox/flomo/`，Flomo Sync 会按标签生成子目录，同一条记录有多个标签时会生成多份文件：先按 frontmatter 中的 `slug` 去重（内容不同时保留双方并标出差异）。
+When Sources come from `00-Inbox/flomo/`, Flomo Sync creates tag-based subdirectories and may duplicate a record with multiple tags. Deduplicate by frontmatter `slug` first; if content differs, retain both versions and flag the differences.
 
-一行或一个短语即为一个条目；同一行包含多个独立知识点时拆开。每个条目记录 `S<n> L<行号>`，以及原文摘录（保留原有错别字）。先给本批 Sources 编号：`S1 = 文件名`。不带冒号的分组标题行（如 `cuda programming`、`leetcode`）并入它下面第一个条目的行号范围，保证每一行都有归属。
+Treat a line or phrase as one item; split a line containing independent knowledge points. Record `S<n> L<line-number>` and a verbatim excerpt, preserving original typos. Number Sources first: `S1 = filename`. Include grouping headings without colons (e.g., `cuda programming`, `leetcode`) in the line range of the first item below them, so every line is accounted for.
 
-### 1.2 错误与歧义扫描
+### 1.2 Scan for Errors and Ambiguity
 
-逐条检查，结果写在处置表的“⚠”列：
+Check each item and record findings in the disposition table's ⚠ column:
 
-| 类型 | 例子 | 处理 |
+| Type | Example | Action |
 |---|---|---|
-| 题号/名称与描述不符 | `230 找从右边看的元素`（右视图是 199，230 是 BST 第 k 小） | 高置信：直接更正并说明依据；不确定指哪一个：列为消歧题 |
-| 术语误用 | `秩为1 -> 向量叉乘`（秩 $1$ 矩阵 $=$ 列向量 $\times$ 行向量 $uv^\top$） | 给出更可能的含义；只有它会改变正文写法时才列为消歧题 |
-| 笔误 | `124 找最小路径和 … 跟0取max`（应为最大） | 直接更正 |
-| 必要但不充分 | `验证极小多项式 -> 带入A`（$p(A)=0$ 只是必要条件） | 不算错误，在“我的理解”中补上缺的条件 |
+| Problem number/name mismatches description | `230 find elements visible from the right` (right-side view is 199; 230 is kth smallest in a BST) | Correct directly with evidence when confident; otherwise ask which problem was intended |
+| Misused terminology | `rank 1 -> vector cross product` (a rank-$1$ matrix is a column vector times a row vector, $uv^\top$) | Suggest the likely meaning; ask for clarification only if it changes the body |
+| Typo | `124 find minimum path sum … max with 0` (should be maximum) | Correct directly |
+| Necessary but insufficient condition | `verify minimal polynomial -> substitute A` ($p(A)=0$ is only necessary) | Do not label it an error; add the missing condition in My Understanding |
 
-更正要写清“原记录 → 更正 → 依据”。如果原话可能只是简写，就写“按 X 理解”，不要判错。
+Document corrections as “original record → correction → evidence.” If the original may simply be shorthand, write “interpreted as X” rather than marking it wrong.
 
-### 1.3 聚合为候选概念
+### 1.3 Group into Candidate Concepts
 
-按 [note-guide §2](note-guide.md#2-概念粒度) 的粒度规则聚合：同一个机制的条目合并，哪怕它们来自不同文件（例如 141 + 142 合为 Floyd 判圈）；题目作为模式笔记里的例子，不单独成篇；相邻的两行不一定相关。
+Follow [note-guide §2](note-guide.md#2-concept-granularity): merge items about the same mechanism even across files (e.g., 141 + 142 → Floyd cycle detection). Use problems as examples in pattern notes rather than separate notes. Adjacent lines are not necessarily related.
 
-可以从公开资料核实的上下文（课程作业规格、题目编号、API 语义）直接核实并引用，不需要问用户。
+Verify publicly available context (assignment specifications, problem numbers, API semantics) directly and cite it instead of asking the user.
 
-### 1.4 查找已有笔记
+### 1.4 Find Existing Notes
 
-对每个候选概念准备 2–4 个检索词（中英文名、常见缩写），只做两种定向查找：
+Prepare 2–4 search terms per candidate (Chinese/English names and common abbreviations), using only these targeted searches:
 
 ```bash
-ls "<Vault>/30-Concepts" | rg -i "<词1>|<词2>"
-rg -il --max-count 1 "^aliases:.*(<词1>|<词2>)" "<Vault>/30-Concepts"
+ls "<Vault>/30-Concepts" | rg -i "<term1>|<term2>"
+rg -il --max-count 1 "^aliases:.*(<term1>|<term2>)" "<Vault>/30-Concepts"
 ```
 
-如果 `aliases` 写成多行列表，改用 `rg -il -A5 "^aliases:" … | …`，或者打开命中的文件头确认。命中的话，处置写“更新 [[已有笔记]]”；没有命中，写“新建”。
+For multiline `aliases` lists, use `rg -il -A5 "^aliases:" … | …` or inspect matching file headers. If a note matches, mark “Update [[existing note]]”; otherwise mark “New”.
 
-### 1.5 处置表
+### 1.5 Disposition Table
 
-| 处置 | 含义 |
+| Disposition | Meaning |
 |---|---|
-| 新建 | 本批产生一篇新的 Concept Note |
-| 更新 [[X]] | 补充到已有笔记 X（例子、陷阱、我的理解、来源） |
-| 并入 [[Y]] | 作为本批另一篇候选笔记的例子、陷阱或子步骤 |
-| 暂缓 | 有价值但材料不足（只有名称、没有内容），或者只是孤立的速查事实；写明还缺什么 |
-| 丢弃 | 学习进度、纯日程等不含知识的内容 |
+| New | Create a new Concept Note in this batch |
+| Update [[X]] | Add examples, pitfalls, understanding, or sources to existing note X |
+| Merge [[Y]] | Include as an example, pitfall, or substep of another candidate note in this batch |
+| Deferred | Valuable but insufficient material (name only, no content), or an isolated lookup fact; specify what is missing |
+| Discard | Progress updates, scheduling, or other content without knowledge |
 
-格式：
+Format:
 
 ```markdown
-| 条目 | 来源 | ⚠ | 处置 | 目标 | 理由 |
+| Item | Source | ⚠ | Disposition | Target | Reason |
 |---|---|---|---|---|---|
-| 141 快慢指针；142 回头同速走 | S1 L32；S4 L26 | | 新建 | [[Floyd 判圈]] | 同一机制，142 是 141 的延伸 |
+| 141 slow/fast pointers; 142 reset one to head, walk at equal speed | S1 L32; S4 L26 | | New | [[Floyd Cycle Detection]] | Same mechanism; 142 extends 141 |
 ```
 
-表下面列出“本轮候选概念”清单，供用户勾选。
+Below the table, list this round's candidate concepts for user selection.
 
-### 1.6 用户选择与续跑
+### 1.6 User Selection and Resumption
 
-调用 `ask_user`：`question` 为“本轮展开哪些概念？（空格可多选）”，`allowMultiple: true`，`options` 为：
-1. **第一项固定为 `全部展开`**（`description`：展开本批所有“新建 / 更新”候选，按一下回车即可全选）；
-2. 其余各项为每个“新建 / 更新”候选概念（`description` 写来源条目数和一句理由）。
+Call `ask_user` with `question: "Which concepts should I expand this round? (Space selects multiple.)"`, `allowMultiple: true`, and these `options`:
 
-暂缓的条目在 `context` 中说明原因。用户没有选中的候选，在本批 `_triage-YYYY-MM-DD.md` 中标为 `暂缓（本轮未选）`。
+1. **Always put “Expand all” first**, with a description explaining that it expands all New / Update candidates in this batch with one selection.
+2. One option per New / Update candidate, describing its source-item count and a brief reason.
 
-**续跑未展开项**：当用户在同一会话或后续会话中说“继续整理剩下的”“把矩阵和 CPS 也展开”时，直接读取 `00-Inbox/concept-drafts/` 中对应的 `_triage-*.md`，把已展开的候选从 `暂缓（本轮未选）` 更新为 `新建` 或 `更新`，不用重新分诊整份 Source。
+Explain deferred items in `context`. Mark unselected candidates “Deferred (not selected this round)” in `_triage-YYYY-MM-DD.md`.
+
+**Resume unexpanded items**: when the user asks to continue the remaining items or expand particular concepts, read the corresponding `_triage-*.md` in `00-Inbox/concept-drafts/`. Change expanded candidates from Deferred (not selected this round) to New or Update, preserving the record's existing label language. Do not re-triage the entire Source.
 
 ## 2. DRAFT
 
-见 [note-guide.md](note-guide.md)。全部草稿写完后再进入提问，这样问题可以附上草稿片段。
+See [note-guide.md](note-guide.md). Finish all drafts before asking questions so each question can include relevant draft excerpts.
 
-## 3. ASK
+## 3. LINK
 
-### 3.1 选题
+A note that links to nothing is hard to find again and adds nothing to the others. Linking is a required step, done after drafting (so link sentences can reference the finished Core Idea) and before questions (so a question can target a relationship).
 
-候选来源：
+### 3.1 Find Candidates
 
-1. **消歧题**：处置表中低置信度的 ⚠ 条目，以及草稿里写成“按 X 理解”的地方。只有当答案会改变正文、又查不到的时候才问。
-2. **自我解释题**：用户在 Sources 中记下了方法或结论，却没有记“为什么”，而这个“为什么”恰好是 Core Idea 的关键关系。例如用户记了“142 找到相遇点后一个指针放回头再同时走”，可以问为什么它们会在入口相遇。
+For each drafted note, collect candidates from:
 
-排序：消歧题优先 → 能覆盖多篇笔记的题 → 用户回答负担小的题。默认全批不超过 3 题，每篇笔记不超过 1 道自我解释题。用户主动要求多问时可以超出。
+1. **This batch**: other drafted notes and Merge targets.
+2. **Same domain**: the domain's `MOC — <Domain>.md` entries, or `rg -l "^domain: <domain>" "<Vault>/30-Concepts"`.
+3. **Key terms**: 2–4 terms from the draft's Core Idea and Mechanism (Chinese/English names, the operation or invariant involved), searched across Concepts:
+   ```bash
+   rg -il "<term1>|<term2>" "<Vault>/30-Concepts" --glob '!MOC — *'
+   ```
+4. **Relations that commonly exist**: what the reader must know first; what this is a special case or generalization of; what it is most easily confused with (from the Core Idea confusion test); where it is applied.
 
-不问的题：纯术语定义（如“什么是 Exclusive Scan”）、可以查证的事实、答案不会改变笔记的问题、同一关系已经有用户解释过的问题。
+Read only candidates' frontmatter, Core Idea, and Connections — not entire notes — unless deciding the relation requires more.
 
-### 3.2 出题
+### 3.2 Choose Typed Links
 
-- **一题只问一个关系。** 反例：“凭什么共同特征联系它们？请从一个实例说起，并指出哪个还不清楚。”这一题问了三件事。
-- **锚定到原句或具体实例**，可以给已知前提，但不要把结论放进题目。例如“已知左右子树和为 4、6，根前缀为 0，右子树的初始前缀是多少？为什么？”，而不是“右子树前缀等于根前缀加左子树和，为什么？”。
-- **消歧题写出当前假设**：“草稿把『秩为1 -> 向量叉乘』理解为秩 1 矩阵可以写成列向量 × 行向量。你指的是这个吗？如果不是，请说明。”
-- 每题都说明“可以回答不知道或跳过”。
-- 批量提问时，每项用 `allowFreeform: true` 且不给 `options`，直接进入文本输入；在 `context` 中放一两句相关草稿片段。
+Use the relation vocabulary in [note-guide §4.1](note-guide.md#41-connections-typed-links). Keep a link only if you can state the specific relationship in one sentence that would teach the reader something. Aim for at least two per new note; one strong link beats three vague ones. If no existing note fits a clearly needed relation (e.g., an unwritten prerequisite), add it as a red link only when the concept is clearly worth creating, and list it under the map's Open Threads.
 
-### 3.3 处理返回
+### 3.3 Reverse Links
 
-- `cancelled` 或某项 `skipped`：这一题记为跳过，按草稿的假设定稿，并把相应问题写进“我的理解”的 ❓ 列表。
-- 部分回答：已回答的正常处理，其余视为跳过。
-- 返回 “Ask requires interactive mode”：在对话中列出问题后结束本轮，等用户回复。
+For every new link `A —relation→ B` where B already exists, prepare the paired entry in B's Connections (relation pairs in note-guide §4.1). Present all reverse links as minimal diffs with the other existing-note diffs in FINALIZE; apply only after confirmation. Do not rewrite B's other content. Links between two notes in the same batch are written in both drafts directly.
 
-追问只在回答暴露出一个**会影响正文的新歧义**时才做，最多 1 题。理解上的缺口直接写进 ❓ 列表，不要追问到用户答对为止。
+### 3.4 Map Placement
 
-## 4. 评估与反馈
+For each new or substantially updated note, choose its domain map:
 
-评估范围**只限于问题本身问到的内容**；问题里没问的，不能算回答缺失。
+- **Map exists**: propose a one-line entry in the right section, in learning order (see [note-guide §9](note-guide.md#9-maps-of-content-mocs)).
+- **No map, and the domain will have ≥ 3 concept notes after this batch**: draft `MOC — <Domain>.md` in the draft directory, including the existing notes of that domain.
+- **Otherwise**: note “no map yet (n notes)” in the batch record; do not create a map for one or two notes.
+- A note that bridges domains belongs to one primary map; mention it under the other map's Cross-Domain Bridges.
 
-| 标记 | 含义 | 写法 |
+## 4. ASK
+
+### 4.1 Select Questions
+
+Candidate questions:
+
+1. **Disambiguation**: low-confidence ⚠ items and draft assumptions phrased as “interpreted as X”. Ask only if the answer changes the body and cannot be looked up.
+2. **Self-explanation**: the user recorded a method or conclusion without the “why”, and that relationship is central to Core Idea. For example, after a note about resetting one pointer to the head after the meeting in problem 142, ask why equal-speed pointers meet at the cycle entry.
+
+Prioritize disambiguation → questions covering multiple notes → low response burden. Default to at most three questions for the entire batch and one self-explanation question per note. Exceed this only if the user requests more.
+
+Do not ask for pure terminology definitions (e.g., “What is Exclusive Scan?”), verifiable facts, answers that would not change a note, or relationships the user has already explained.
+
+### 4.2 Write Questions
+
+- **Ask about one relationship per question.** Avoid multipart prompts such as “What common feature connects them? Start with an example and identify what remains unclear.”
+- **Anchor questions in the original wording or a concrete example.** Provide known premises without revealing the conclusion. For example: “The left and right subtree sums are 4 and 6, and the root prefix is 0. What is the right subtree's initial prefix, and why?” Not: “Why is the right subtree prefix the root prefix plus the left subtree sum?”
+- **State current assumptions in disambiguation questions**: “The draft interprets ‘rank 1 -> vector cross product’ as a rank-1 matrix being a column vector times a row vector. Is that what you meant? If not, please clarify.”
+- Say that “I don't know” or skipping is acceptable for every question.
+- For batches, set `allowFreeform: true` on each entry and omit `options` to enter text input directly. Include one or two relevant draft sentences in `context`.
+
+### 4.3 Handle Results
+
+- `cancelled` or an entry marked `skipped`: record it as skipped, finalize using draft assumptions, and add the question to My Understanding's ❓ list.
+- Partial batch answers: process answered questions normally and treat the rest as skipped.
+- “Ask requires interactive mode”: list questions in conversation, end the turn, and wait for a reply.
+
+Ask at most one follow-up, only when an answer reveals a **new ambiguity affecting the body**. Put understanding gaps directly in the ❓ list; do not keep questioning until the user gets it right.
+
+## 5. Assessment and Feedback
+
+Assess **only what the question actually asked**. Do not penalize omissions outside its scope.
+
+| Mark | Meaning | Feedback |
 |---|---|---|
-| ✅ | 对问到的关系给出了正确解释 | 一句话确认，必要时补充适用条件 |
-| ◐ | 方向对，但缺少关键的一环 | 指出缺的那一环，并加入 ❓ |
-| ✗ | 有可以明确指出的错误 | 给出更正和依据，保留原话 |
-| — | 跳过、不知道、不记得 | 不评级，相应问题加入 ❓ |
+| ✅ | Correctly explains the relationship asked about | Confirm in one sentence; add applicability conditions if necessary |
+| ◐ | Correct direction but missing a key link | Identify that link and add it to ❓ |
+| ✗ | A specific identifiable error | Correct with evidence, retaining the original response |
+| — | Skipped, unknown, or not remembered | Do not grade; add the question to ❓ |
 
-- 只答出结论、没有给出原因时，记 ◐（“结论正确；原因未说明”）。
-- 语气不确定（“应该…吧”）不影响评级；可以在反馈中让用户确认“你的判断是对的”。
-- 措辞和标准说法不同，不算错。
-- 对话中的反馈和笔记中的评价内容一致，一行即可。
+- A correct conclusion without the requested reason is ◐ (“Correct conclusion; reason not explained”).
+- Uncertain phrasing (“I think…?”) does not lower the grade; feedback may confirm that the judgment is correct.
+- Wording different from the standard formulation is not an error.
+- Keep conversational and note feedback consistent; one line is enough.
 
-## 5. 本批记录 `_triage-YYYY-MM-DD.md`
+## 6. Batch Record: `_triage-YYYY-MM-DD.md`
 
-写入草稿目录，内容依次为：Sources 编号表、处置表、本轮选择、提问原文与回答原文（含来源：`ask_user` / 对话 / 用户提供的历史回答）、评估、生成和更新的文件清单。这一份文件就是本批唯一的过程记录。
+Write to the draft directory in this order: numbered Sources list, disposition table, this round's selections, links added (`[[A]] —relation→ [[B]]`, marking reverse links pending confirmation), map placements, verbatim questions and answers (including origin: `ask_user` / conversation / user-supplied historical answers), assessments, and created/updated files. This is the batch's only process record.
 
-## 6. REVIEW：概念抽查与状态演进
+## 7. REVIEW: Concept Checks and State Evolution
 
-当用户要求“复习 / 抽查 / 考考我”（可指定学科 `domain`、标签或具体笔记）时执行：
+Use when the user requests review, spot-checking, or a quiz, optionally specifying `domain`, tags, or notes.
 
-### 6.1 扫描与选题
+### 7.1 Scan and Select
 
-1. 扫描 `<Vault>/30-Concepts/*.md`（若用户要求连草稿一起复习，则同时扫描 `00-Inbox/concept-drafts/*.md` 中非 `_triage` 的笔记）。
-2. 按用户指定的 `domain`、标签或文件名过滤；未指定则全选。
-3. 按以下优先级选出 **2–3 篇**笔记（单轮总题数 2–4 题）：
-   - **第一优先（`mastery: shaky` 或含 `✗`）**：曾出现过错误理解或尚无自我解释；
-   - **第二优先（`mastery: partial` 或含 `❓` / `◐`）**：仍有未决问题或半懂环节；
-   - **第三优先**：`last_reviewed` 为空或日期最早的笔记。
+1. Scan `<Vault>/30-Concepts/*.md`, excluding `type: moc` maps. If the user also requests drafts, include non-`_triage` notes in `00-Inbox/concept-drafts/*.md`.
+2. Filter by requested `domain`, tags, or filename; otherwise consider all notes.
+3. Choose **2–3 notes**, with 2–4 total questions per round, in this priority order:
+   - **First: `mastery: shaky` or containing `✗`** — prior misunderstanding or no self-explanation yet.
+   - **Second: `mastery: partial` or containing `❓` / `◐`** — unresolved questions or incomplete understanding.
+   - **Third**: empty or oldest `last_reviewed`.
 
-### 6.2 出题（`ask_user`）
+### 7.2 Ask Questions (`ask_user`)
 
-对选中的每篇笔记出 1 题（最多 2 题）：
+Ask one question per selected note (at most two):
 
-- 如果 `## 我的理解` 里有 `✗`：换一个具体小场景或边界条件考察同一个易错点，检验是否真正纠正；
-- 如果有 `❓` 或 `◐`：直接围绕该缺口提问；
-- 如果已是 `solid`：从 `## Recall` 中选一题。
-- 调用 `ask_user`（`allowFreeform: true`，不给预设选项；`context` 只写概念名与题目所需的最小前提，**不要把 `Core Idea` 或答案放进 `context`**）。
+- If My Understanding contains `✗`, use a different small scenario or boundary condition to test whether the misconception is corrected.
+- If it contains `❓` or `◐`, ask directly about that gap.
+- If already `solid`, select a Recall question.
+- Call `ask_user` with `allowFreeform: true` and no preset options. Include only the concept name and minimal necessary premises in `context`; **do not include Core Idea or the answer**.
 
-### 6.3 评估与原位更新笔记
+### 7.3 Assess and Update Notes in Place
 
-收到回答后，按 §4 标准给出对话反馈（`✅ / ◐ / ✗` + 原因），并**直接用 `edit` 更新被抽查的笔记**（复习由用户主动发起，无需再问一次 diff 确认）：
+After answers arrive, give conversational feedback following §5 (`✅ / ◐ / ✗` + reason), then **use `edit` directly on the reviewed notes**. User-initiated review does not require a second diff confirmation.
 
-1. **更新 `## 我的理解`**：
-   - **答对（`✅`）了原本的 `❓`**：删除该条 `❓`，新增：
+1. **Update My Understanding**, preserving its existing heading:
+   - **An existing `❓` answered correctly (`✅`)**: remove that question and add:
      ```markdown
-     - 💬「用户本次回答原话」（复习，YYYY-MM-DD）
-       ✅ 一句话确认（针对问题：…）
+     - 💬 “Verbatim user response” (review, YYYY-MM-DD)
+       ✅ One-sentence confirmation (question: …)
      ```
-   - **答对（`✅`）了原本的 `◐` 或 `✗`**：保留原条目作为学习轨迹，在其下方新增本次 `💬「…」（复习，YYYY-MM-DD）` 与 `✅` 评价，说明此前缺失的一环或错误已补齐。
-   - **回答为 `◐` 或 `✗`**：新增本次原话与 `◐ / ✗` 评价，并保留或更新对应的 `❓`。
-   - **跳过（`—`）**：保留原 `❓` 不变。
-2. **更新 frontmatter**：
-   - 将 `last_reviewed` 设为当天日期 `YYYY-MM-DD`（只要该笔记有至少一题被作答）。
-   - 按 [note-guide §7](note-guide.md#7-命名与-frontmatter) 重新计算并更新 `mastery`（例如全部 `❓` 已解决且核心机制已 `✅` 时，从 `partial` 升级为 `solid`）。
-3. 最后在对话中列出每篇笔记的 `mastery` 变化（如 `partial → solid`）和仍未解决的 `❓`。
+   - **An existing `◐` or `✗` answered correctly (`✅`)**: retain the original as learning history. Append this review's verbatim `💬` response and `✅` assessment underneath, explaining that the missing link or misconception is now resolved.
+   - **A `◐` or `✗` response**: add the new verbatim response and assessment, retaining or updating the corresponding `❓`.
+   - **Skipped (`—`)**: leave the original `❓` unchanged.
+2. **Update frontmatter**:
+   - Set `last_reviewed` to today's `YYYY-MM-DD` if at least one question about this note was answered.
+   - Recompute `mastery` using [note-guide §7](note-guide.md#7-naming-and-frontmatter). For example, promote `partial` to `solid` when all `❓` are resolved and the core mechanism has a `✅` explanation.
+3. End by listing each note's `mastery` change (e.g., `partial → solid`), remaining `❓`, and links added by connection questions.
+
+## 8. CONNECT: Discovering Links Through Review
+
+Recall strengthens single notes; connection questions strengthen the network and can produce new ideas. Use them inside a normal review round (one question replacing a quiz question) or as a dedicated round when the user asks to connect concepts (2–3 questions).
+
+### 8.1 Choose Pairs
+
+1. Build the existing link graph from Connections sections (`rg -o "\[\[[^]|#]+" <notes>` is enough; ignore links inside `sources` and References).
+2. Candidate pairs: two notes with **no link in either direction**, preferably from **different domains** or different sections of one map.
+3. Keep a pair only if you can see a plausible structural relation from their Core Ideas — a shared invariant, algebraic structure, the same algorithmic pattern, a trade-off with the same shape, or one serving as a tool for the other. Example kinds (not evidence about the vault): an associative operator in a parallel scan ↔ monoid/Functor laws; graph degree constraints ↔ counting arguments in another proof. Do not pick random pairs.
+4. Prefer pairs where at least one note is `solid` or `partial`, so the user has something to build on. Avoid pairs already asked in a recent review (check My Understanding for `(connect, …)` entries).
+
+### 8.2 Ask
+
+One relationship per question, via `ask_user` with `allowFreeform: true`, no options. `context` contains both note titles and one neutral premise from each (not their Core Ideas, not the relation you suspect). Example:
+
+> “[[X]] relies on property P; [[Y]] studies structure Q. Do you see a relationship between them — for example, one being a special case, a tool, or a contrast to the other? ‘No real relationship’ or ‘I don't know’ are acceptable answers.”
+
+### 8.3 Assess and Record
+
+Assess whether the stated relationship is **true and specific**, using §5 marks:
+
+| Result | Action |
+|---|---|
+| ✅ A true, specific relationship | Add a typed link in **both** notes' Connections (direct edit; user-initiated review). Phrase the link sentence in the note's voice, not as a quote. Add a `💬 … (connect, YYYY-MM-DD)` + `✅` entry to My Understanding of the note whose mechanism the answer explains. |
+| ◐ Right direction, missing the link that makes it hold | Add the link only if you can verify the full relationship; record the missing step as ❓ in the more relevant note. |
+| ✗ A specific false relationship | Do not link. Correct with evidence; record under My Understanding if it reveals a misconception about either note's mechanism (this may affect `mastery`). |
+| “No relationship” / — | If you agree, do nothing. If you see a real one, explain it in one or two sentences and add it as a ❓ (“How does X relate to Y?”) rather than a link the user has not engaged with. |
+
+If the answer contains an **insight that belongs to neither note** (a general principle connecting both), draft a new concept note in the draft directory with links to both, and mention it in the summary. Connection answers update `last_reviewed` for the notes involved; `mastery` changes only per the rules in note-guide §7.
+
+## 9. MAPS: Build and Refresh
+
+Use when the user asks to create or tidy maps, or to link up existing notes (Mode D).
+
+1. **Collect**: list concept notes of the domain (by `domain` frontmatter), reading frontmatter, Core Idea, and Connections.
+2. **Order**: group notes into 2–5 sections (sub-topics or stages) and order each section by dependency — prerequisites first, then the notes that build on them. Use existing `prerequisite` / `enables` links where present.
+3. **Annotate**: each entry gets one line on what the note contributes and why it is in this position (see note-guide §9). A bare list of links is not a map.
+4. **Gaps**: list under Open Threads the concepts that the ordering requires but no note covers, plus related Deferred triage items.
+5. **Links**: while ordering, propose missing typed links between notes (with reverse pairs) as diffs; this is often the most valuable output.
+6. **Health report**: end by listing concept notes in no map, notes with no incoming links (orphans), and red links. Report only; fix them only when the user asks.

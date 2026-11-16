@@ -6,5 +6,13 @@ if [[ "$(uname -s)" == "Darwin" ]]; then
   fi
 fi
 
+# Racket's macOS installer keeps command-line tools inside its application folder.
+if (( ! $+commands[racket] )); then
+  for racket_bin in /Applications/Racket*/bin(N); do
+    [[ -x "$racket_bin/racket" ]] && path=("$racket_bin" $path)
+  done
+  unset racket_bin
+fi
+
 # Added by swiftly on macOS.
 [[ -r "$HOME/.swiftly/env.sh" ]] && source "$HOME/.swiftly/env.sh"

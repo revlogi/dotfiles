@@ -24,22 +24,27 @@
   },
   "block_quote": {
     "indent": 1,
-    "indent_token": "\u2502 "
+    "indent_token": "\u2502 ",
+    "color": "8"
   },
   "list": {
     "level_indent": 2
   },
   "item": {
-    "block_prefix": "\u2022 "
+    "block_prefix": "\u2022 ",
+    "color": "6"
   },
   "enumeration": {
-    "block_prefix": ". "
+    "block_prefix": ". ",
+    "color": "4"
   },
   "strong": {
-    "bold": true
+    "bold": true,
+    "color": "4"
   },
   "emph": {
-    "italic": true
+    "italic": true,
+    "color": "3"
   },
   "strikethrough": {
     "crossed_out": true
@@ -61,14 +66,73 @@
     "chroma": {
       "text": {},
       "background": {},
-      "keyword": {
-        "bold": true
-      },
-      "name_builtin": {
-        "bold": true
-      },
       "comment": {
+        "color": "#7c7f93",
         "italic": true
+      },
+      "comment_preproc": {
+        "color": "#8839ef"
+      },
+      "keyword": {
+        "color": "#8839ef",
+        "bold": true
+      },
+      "keyword_reserved": {
+        "color": "#8839ef",
+        "bold": true
+      },
+      "keyword_namespace": {
+        "color": "#8839ef"
+      },
+      "keyword_type": {
+        "color": "#df8e1d"
+      },
+      "operator": {
+        "color": "#179299"
+      },
+      "punctuation": {},
+      "name_builtin": {
+        "color": "#1e66f5",
+        "bold": true
+      },
+      "name_function": {
+        "color": "#1e66f5",
+        "bold": true
+      },
+      "name_class": {
+        "color": "#df8e1d",
+        "bold": true
+      },
+      "name_constant": {
+        "color": "#fe640b"
+      },
+      "name_decorator": {
+        "color": "#8839ef"
+      },
+      "name_attribute": {
+        "color": "#179299"
+      },
+      "name_tag": {
+        "color": "#8839ef"
+      },
+      "literal_string": {
+        "color": "#40a02b"
+      },
+      "literal_string_escape": {
+        "color": "#ea76cb"
+      },
+      "literal_number": {
+        "color": "#fe640b"
+      },
+      "generic_deleted": {
+        "color": "#d20f39"
+      },
+      "generic_inserted": {
+        "color": "#40a02b"
+      },
+      "generic_subheading": {
+        "color": "#1e66f5",
+        "bold": true
       }
     },
     "color": "6"
@@ -79,6 +143,7 @@
     "row_separator": "\u2500"
   },
   "hr": {
+    "color": "8",
     "format": "\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n"
   },
   "task": {

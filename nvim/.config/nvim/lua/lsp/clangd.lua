@@ -1,5 +1,4 @@
-local lsp_utils = require 'lsp.init'
-local platform = require 'custom.platform'
+local platform = require 'custom.utils.platform'
 
 local cmd = { 'clangd', '--background-index', '--header-insertion=iwyu' }
 if platform.is_remote then
@@ -9,7 +8,6 @@ end
 return {
   cmd = cmd,
   filetypes = { 'c', 'cpp', 'cuda' },
-  capabilities = lsp_utils.get_capabilities(),
   on_attach = function(client, bufnr)
     client.server_capabilities.documentFormattingProvider = false
     client.server_capabilities.documentRangeFormattingProvider = false

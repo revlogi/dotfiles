@@ -1,52 +1,62 @@
 ---
 name: python-style
-description: 按用户的 Python 习惯编写、修改、重构和审查 Python 代码及示例：使用 uv、Ruff 与适度类型标注，保持算法表达直接、脚本轻量、项目接口清晰。涉及 Python 实现时加载；仅运行现有 Python 工具而不修改代码时无需加载。
+description: Write, modify, refactor, and review Python code and examples according to the user's preferences. Use uv, Ruff, and moderate type annotations; keep algorithms direct, scripts lightweight, and project interfaces clear. Load for Python implementation work; not needed merely to run existing Python tools without modifying code.
 ---
 
-# Python 风格
+# Python Style
 
-将以下规则用于本次任务涉及的 Python 代码。用户当前要求和项目明确约定优先；不要为了统一个人风格改动无关代码、公共接口或项目工具链。
+Apply these rules to Python code involved in the current task. The user's current request and explicit project conventions take precedence. Do not change unrelated code, public interfaces, or project tooling just to impose a personal style.
 
-## 先判断上下文
+## Establish Context First
 
-- 读取项目的 `AGENTS.md`、`pyproject.toml`、已有检查配置及邻近代码，确认 Python 版本、运行方式与测试入口。
-- 区分算法/课程练习、一次性脚本和可复用项目模块。保留题目签名、课程限制及已有 doctest；不要给小练习套 CLI、配置系统或分层架构。
-- 下文工具偏好来自用户现有配置；代码组织是默认指导，不是要求把所有旧代码迁移到同一种写法。
+- Read the project's `AGENTS.md`, `pyproject.toml`, existing check configuration, and nearby code to identify the Python version, execution workflow, and test entry points.
+- Distinguish algorithm/course exercises, one-off scripts, and reusable project modules. Preserve required signatures, course restrictions, and existing doctests. Do not wrap small exercises in a CLI, configuration system, or layered architecture.
+- Tool preferences below come from the user's existing configuration. Code organization is default guidance, not a requirement to migrate all old code to one style.
 
-## 环境与工具
+## Environment and Tools
 
-- 新 Python 项目默认使用 **uv**。已有 uv 项目通过 `uv run python ...`、`uv run pytest ...` 等运行，不要求先手动激活环境。
-- 需要新增依赖时使用 `uv add`，开发依赖使用 `uv add --dev`；同步维护 `pyproject.toml` 和 `uv.lock`，不把 `.venv` 纳入版本管理。不向系统 Python 安装依赖。
-- 已有项目使用其他环境管理方案时沿用；标准库即可完成的一次性脚本不必为此初始化项目或安装依赖。
-- 格式化与 lint 默认使用 **Ruff**。遵循项目的行宽、规则和目标版本，不另加 Black/isort 或自行争论引号风格。只格式化本次涉及的文件。
-- 用户编辑器使用 **basedpyright，basic 模式**。项目已有更严格设置时遵循项目；不要擅自启用 strict、批量补注解或增加类型检查依赖。
-- Python 语法以项目支持版本为准，不因某个个人项目使用 3.13 就把所有项目升级到 3.13。
+- Default to **uv** for new Python projects. In existing uv projects, run commands such as `uv run python ...` and `uv run pytest ...` without requiring manual environment activation.
+- Add dependencies with `uv add` and development dependencies with `uv add --dev`. Keep `pyproject.toml` and `uv.lock` in sync, and do not version `.venv`. Do not install dependencies into system Python.
+- Keep other environment-management approaches in existing projects. A one-off standard-library script does not need project initialization or dependencies.
+- Default to **Ruff** for formatting and linting. Follow project line length, rules, and target version. Do not add Black/isort or independently debate quote style. Format only files involved in the task.
+- The user's editor uses **basedpyright in basic mode**. Follow stricter project settings when present; do not independently enable strict mode, annotate everything, or add type-checking dependencies.
+- Use syntax supported by the project. One personal project using Python 3.13 does not justify upgrading every project to 3.13.
 
-## 代码表达
+## Code Expression
 
-- 优先使用短小、职责明确的函数，直接表达数据流。局部状态和普通循环是正常选择，不必为了“函数式”引入高阶函数链或递归。
-- 简单变换可用推导式；含多步逻辑、副作用或难读的嵌套时用普通循环。需要索引和值时优先 `enumerate`，并行遍历时考虑 `zip`。
-- 使用清楚的 `snake_case` 名称；算法中的 `i`、`n` 等惯用局部名可以保留。不要机械模仿旧练习中的命名，也不要为了显得描述充分写冗长名称。
-- 普通集合和标准库足够时直接使用。文件路径优先 `pathlib.Path`，文本文件明确编码；格式化字符串优先 f-string。
-- 独立可执行脚本通常使用 `main()` 和 `if __name__ == "__main__":`；导入模块不应顺带运行任务。片段、notebook 和课程模板不强制套入口。
-- 注释说明意图、算法不变量或不直观的取舍；不逐行翻译代码。公共函数需要说明契约时写简洁 docstring，语言沿用项目。
+- Prefer small, focused functions that express data flow directly. Local state and ordinary loops are normal choices; do not introduce higher-order function chains or recursion merely to be functional.
+- Use comprehensions for simple transformations and ordinary loops for multistep logic, side effects, or hard-to-read nesting. Prefer `enumerate` when both index and value are needed; consider `zip` for parallel iteration.
+- Use clear `snake_case` names. Keep conventional algorithm-local names such as `i` and `n`. Neither mechanically copy old exercise naming nor use unnecessarily long descriptive names.
+- Use ordinary collections and the standard library when sufficient. Prefer `pathlib.Path` for paths, explicit encodings for text files, and f-strings for string formatting.
+- Standalone executable scripts normally use `main()` and `if __name__ == "__main__":`. Importing a module should not run its task. Do not force entry-point wrappers onto snippets, notebooks, or course templates.
+- Comments explain intent, algorithm invariants, or non-obvious trade-offs, not each line of code. Use concise docstrings when public functions need a contract, following the project's language.
 
-## 类型与抽象的尺度
+## Function Layout and Decomposition
 
-- 可复用函数、模块边界和类方法优先标注参数及返回值；明显的局部变量依赖推断。短小练习沿用题目风格，不强制全量注解。
-- 版本允许时优先 `list[T]`、`dict[K, V]`、`T | None`。仅在前向引用或项目惯例需要时使用 `from __future__ import annotations`，不机械添加。
-- 有真实状态和行为时使用类；有多种可替换策略时可用 `Protocol` 表达接口。不要为单个函数新增 Manager、Factory、抽象基类或通用插件层。
-- 简单数据记录可根据项目风格选择普通类或 `dataclass`；不要只为类型标注引入 Pydantic 等运行时框架。
-- 不用 `Any`、`cast`、`# type: ignore` 或关闭规则掩盖实际问题；必要例外应局部化并说明原因。
+- Optimize for a person reading the code, not for minimum line count. Within a function, use a single blank line to separate meaningful phases such as validation, preparation, computation, and result construction. Keep closely related statements together; do not put a blank line after every statement or force every function into the same phases.
+- Give compound statements visual breathing room when surrounding code changes purpose. Do not rely on indentation alone to make a long function readable, or assume that passing Ruff formatting checks guarantees readable organization.
+- Actively look for extraction opportunities when a function mixes responsibilities, repeats a substantial block, contains deeply nested logic, or requires the reader to track too many intermediate values. Do not wait for code reuse before extracting a helper: a well-named helper can make a distinct operation easier to understand and test even when called only once.
+- Extract coherent operations with clear inputs and outputs, and name helpers after what they do. Keep orchestration functions readable as a sequence of meaningful steps; keep implementation details in focused helpers at the appropriate module or class scope.
+- Use judgment rather than a rigid function-length limit. A long function with several independently nameable stages usually deserves decomposition; a cohesive algorithm may be clearer kept together with blank lines between its stages. Preserve required public signatures while extracting private helpers when useful.
+- Avoid fragmentation: do not extract every few lines, create trivial forwarding helpers, or split tightly coupled logic into functions that pass a large bundle of local state back and forth. Prefer a few substantive helpers over many tiny functions that force the reader to jump around.
+- Before delivery, reread changed functions for visual grouping and responsibility boundaries. If a function reads like an uninterrupted wall of statements, add meaningful spacing or decompose it; comments that merely label phases are not a substitute for either.
 
-## 错误与验证
+## Types and Abstraction
 
-- 在输入边界或状态不变量处做必要检查，抛出具体异常。不用宽泛的 `except Exception: pass`，也不在失败时返回看似成功的空结果。
-- 算法练习检查典型输入和边界，必要时运行已有 doctest；项目修改运行受影响的测试。不要仅为风格调整建立重复实现逻辑的测试。
-- uv 项目已提供相应工具时，对改动文件运行 `uv run ruff check <files>`、`uv run ruff format --check <files>`，并运行相关测试。需要格式化时先执行 `uv run ruff format <files>` 再检查。
-- 类型检查沿用项目命令；没有配置或可用工具时如实说明，不把“编辑器配置了 basedpyright”当作项目类型检查已通过。
-- 交付前确认：没有扩大修改范围，没有引入不必要的依赖或抽象；明确说明实际运行的检查及未完成的验证。
+- Prefer parameter and return annotations for reusable functions, module boundaries, and class methods. Rely on inference for obvious local variables. Follow exercise style for small tasks rather than requiring full annotations.
+- Prefer `list[T]`, `dict[K, V]`, and `T | None` when supported. Use `from __future__ import annotations` only for forward references or project conventions, not mechanically.
+- Use classes for real state and behavior; use `Protocol` for interfaces with multiple interchangeable strategies. Do not introduce a Manager, Factory, abstract base class, or general plugin layer for a single function.
+- Choose a plain class or `dataclass` for simple records according to project style. Do not add runtime frameworks such as Pydantic solely for type annotations.
+- Do not hide real problems with `Any`, `cast`, `# type: ignore`, or disabled rules. Keep necessary exceptions local and explain them.
 
-## 偏好依据
+## Errors and Validation
 
-此 skill 的初始依据为 dotfiles 中的 Python cheatsheet（uv、pytest、Ruff）、Neovim 的 Ruff 格式化与 basedpyright basic 配置、`pymain`/`enum` snippets，以及本地算法练习和 `rl-cache` 项目样本（现代类型、普通类、策略 Protocol）。样本不保证全部为用户手写；不要把样本中的每一个写法都视为用户的强制偏好。
+- Perform necessary checks at input boundaries or state invariants and raise specific exceptions. Do not use broad `except Exception: pass` or return apparently successful empty results on failure.
+- Check typical inputs and boundaries for algorithm exercises, running existing doctests when appropriate. Run affected tests for project changes. Do not add tests that duplicate implementation logic merely for style changes.
+- When a uv project already provides the tools, run `uv run ruff check <files>`, `uv run ruff format --check <files>`, and relevant tests for changed files. If formatting is needed, run `uv run ruff format <files>` first.
+- Use the project's type-checking command. If none is configured or available, say so; editor basedpyright configuration is not evidence that project type checks passed.
+- Before delivery, confirm scope has not expanded and no unnecessary dependencies or abstractions were added. State which checks actually ran and which verification remains incomplete.
+
+## Basis for These Preferences
+
+This skill was initially based on the dotfiles Python cheatsheet (uv, pytest, Ruff), Neovim Ruff formatting and basedpyright basic configuration, `pymain`/`enum` snippets, local algorithm exercises, and the `rl-cache` project (modern types, plain classes, strategy Protocols). These samples are not necessarily all handwritten by the user; do not treat every pattern in them as a mandatory preference.

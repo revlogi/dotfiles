@@ -6,26 +6,26 @@ Custom bindings below use **Space** as Leader. Start in normal mode unless noted
 
 | Keys        | Action                            |
 | ----------- | --------------------------------- |
-| Space s k   | Search key bindings               |
-| Space s f   | Find files                        |
-| Space s g   | Search text across files          |
-| Space s w   | Search the word under the cursor  |
-| Space s .   | Recent files                      |
-| Space Space | Browse open buffers               |
-| Space /     | Search within the current buffer  |
-| Space e     | Show diagnostic details           |
-| Space q     | Open the diagnostic location list |
-| Esc Esc     | Leave terminal input mode         |
+| `Space s k`   | Search key bindings               |
+| `Space s f`   | Find files                        |
+| `Space s g`   | Search text across files          |
+| `Space s w`   | Search the word under the cursor  |
+| `Space s .`   | Recent files                      |
+| `Space Space` | Browse open buffers               |
+| `Space /`     | Search within the current buffer  |
+| `Space e`     | Show diagnostic details           |
+| `Space q`     | Open the diagnostic location list |
+| `Esc Esc`     | Leave terminal input mode         |
 
 ## Everyday editing
 
 | Keys           | Action                             |
 | -------------- | ---------------------------------- |
-| ciw            | Change the current word            |
-| v / V / Ctrl-v | Character / line / block selection |
-| gg / G         | First / last line                  |
-| gra            | Code Action                        |
-| %              | Jump to the matching bracket       |
+| `ciw`            | Change the current word            |
+| `v` / `V` / `Ctrl-v` | Character / line / block selection |
+| `gg` / `G`         | First / last line                  |
+| `gra`            | Code Action                        |
+| `%`              | Jump to the matching bracket       |
 
 ## Commands
 
@@ -40,12 +40,24 @@ Custom bindings below use **Space** as Leader. Start in normal mode unless noted
 :help user-manual   " Built-in manual
 ```
 
+## Racket / PLAI
+
+These bindings apply to `.rkt` buffers and save the file before running.
+
+| Keys | Action |
+| --- | --- |
+| `Space r r` | Run the file in a terminal split |
+| `Space r i` | Load the file into a fresh interactive Racket session |
+| `Esc Esc` | Leave terminal input mode |
+
+See [Racket setup](../editor.md#racket--plai-325) for language packages and an example.
+
 ## AI chat
 
 | Keys | Action |
 | --- | --- |
-| Space a c | Toggle AI chat |
-| Space a a | Open AI actions |
-| Space a x | Open files changed by CodeCompanion |
+| `Space a c` | Toggle AI chat |
+| `Space a a` | Open AI actions |
+| `Space a x` | Open files changed by CodeCompanion |
 
 For language tools and authentication, see [Editor setup](../editor.md).

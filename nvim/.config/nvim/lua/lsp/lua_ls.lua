@@ -1,5 +1,3 @@
-local lsp_utils = require 'lsp.init'
-
 return {
   settings = {
     Lua = {
@@ -8,5 +6,4 @@ return {
       },
     },
   },
-  capabilities = lsp_utils.get_capabilities(),
 }

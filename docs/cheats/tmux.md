@@ -25,29 +25,29 @@ Detaching keeps programs running; it does not close the session.
 
 | Next key | Action |
 | --- | --- |
-| d | Detach from the session |
-| $ | Rename the current session |
-| s | Browse sessions and windows |
-| ( / ) | Previous / next session |
-| c | Create a window in the home directory |
-| , | Rename the current window |
-| w | Browse windows |
-| n / p | Next / previous window |
-| 1 ... 9 | Select a window by number |
-| l | Return to the last window |
-| : | Open the tmux command prompt |
+| `d` | Detach from the session |
+| `$` | Rename the current session |
+| `s` | Browse sessions and windows |
+| `(` / `)` | Previous / next session |
+| `c` | Create a window in the home directory |
+| `,` | Rename the current window |
+| `w` | Browse windows |
+| `n` / `p` | Next / previous window |
+| `1 ... 9` | Select a window by number |
+| `l` | Return to the last window |
+| `:` | Open the tmux command prompt |
 
 ## Panes and navigation
 
 | Next key | Action |
 | --- | --- |
-| i | Split according to the pane aspect ratio |
-| " | Split top / bottom in the current directory |
-| % | Split left / right in the current directory |
-| z | Toggle pane zoom |
-| o | Select the next pane |
-| Space | Cycle pane layouts |
-| x | Close the current pane after confirmation |
+| `i` | Split according to the pane aspect ratio |
+| `"` | Split top / bottom in the current directory |
+| `%` | Split left / right in the current directory |
+| `z` | Toggle pane zoom |
+| `o` | Select the next pane |
+| `Space` | Cycle pane layouts |
+| `x` | Close the current pane after confirmation |
 
 Without a prefix: **Ctrl-h/j/k/l** navigates tmux / Neovim splits (plugin required).
 **Shift + arrow keys** resizes panes. `exit` closes the shell in a pane.
@@ -56,14 +56,14 @@ Without a prefix: **Ctrl-h/j/k/l** navigates tmux / Neovim splits (plugin requir
 
 | Next key | Action |
 | --- | --- |
-| [ | Enter copy mode; q exits |
-| ] | Paste the tmux buffer |
-| ? | Open this cheatsheet browser |
-| / | Show all tmux key bindings |
-| r | Reload tmux configuration |
-| K | Clear the screen and scrollback history |
-| Ctrl-s | Save session layouts (Resurrect plugin) |
-| Ctrl-r | Restore session layouts (Resurrect plugin) |
+| `[` | Enter copy mode; `q` exits |
+| `]` | Paste the tmux buffer |
+| `?` | Open this cheatsheet browser |
+| `/` | Show all tmux key bindings |
+| `r` | Reload tmux configuration |
+| `K` | Clear the screen and scrollback history |
+| `Ctrl-s` | Save session layouts (Resurrect plugin) |
+| `Ctrl-r` | Restore session layouts (Resurrect plugin) |
 
 In copy mode: `v` starts selection, `Ctrl-v` toggles rectangle selection,
 and `y` copies and exits. Session snapshots restore layouts, not process memory.

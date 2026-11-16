@@ -1,0 +1,17 @@
+{
+  "name": "pi-reflect",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "description": "Explicit pstack reflection with project-scoped upstream pi-memory",
+  "keywords": ["pi-package"],
+  "pi": {
+    "extensions": ["./memory-policy.ts"],
+    "skills": ["./skills/reflect"]
+  },
+  "scripts": {
+    "test": "node --test tests/integration.test.mjs",
+    "test:live": "node tests/live.mjs"
+  }
+}

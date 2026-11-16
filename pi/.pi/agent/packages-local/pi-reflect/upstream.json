@@ -1,0 +1,18 @@
+{
+  "mirror": "https://github.com/backnotprop/pstack",
+  "commit": "25abb38559ddbabec563646224d09eff9a250eca",
+  "source": "skills/reflect",
+  "original": "https://github.com/cursor/plugins/tree/main/pstack/skills/reflect",
+  "originalFilesSha256": {
+    "SKILL.md": "4e04c17f5ee635b504acd0b16ce8fbe1f8381357f2bdcb4fb6608473c5e1b8a2",
+    "references/divergent-reviewer.md": "00b278c4e06570f8ca50a52eb3baa6fccd1f76416c2e44d4ba9b69412c5bc043",
+    "references/judgment-reviewer.md": "e4336051be5891ace332e922a33ecb81f1f81624d2d976c133b37ff683ee915d",
+    "references/synthesizer.md": "6af816963de74d1a1aef4070273c1ff533d2072732e488e159ddc0b299fec3cd",
+    "references/tooling-reviewer.md": "4454bb45fc7a90a24a6809d8bdd95f49dd619dae443f21d0cf6473210bbca0fd"
+  },
+  "memory": {
+    "source": "npm:pi-memory",
+    "testedVersion": "0.4.2",
+    "indexSha256": "4203842d44eef03d50166ad5e6d30b1e9491d036690fb2aec2bce685277edefc"
+  }
+}

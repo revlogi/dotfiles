@@ -1,105 +1,163 @@
-# Note Guide：概念提炼与写作
+# Note Guide: Concept Extraction and Writing
 
-## 1. 目标
+## 1. Goal
 
-一篇好的 Concept Note，几个月后打开时，读者能够：
+A good Concept Note lets a reader return months later and:
 
-1. 用 Core Idea 在 10 秒内回想起这个概念的**本质**；
-2. 通过机制和例子重新推出关键结论；
-3. 知道什么时候用它、在哪里容易出错；
-4. 看到自己当时理解到哪一步、还剩哪些问题。
+1. Recall the concept's **essence** from Core Idea in ten seconds.
+2. Reconstruct key conclusions through the mechanism and examples.
+3. Know when to use it and where mistakes arise.
+4. See their understanding at the time and remaining questions.
+5. Follow links to what it depends on, what it enables, and what it is confused with — and reach it again from a domain map.
 
-正文直接解释概念，不叙述学习过程（不写“你记录了…”“用户回答…”）。技术上的限定条件写在正文里。
+Explain the concept directly in the body, not the learning process. Avoid “you recorded…” or “the user answered…”. Put technical conditions in the body.
 
-## 2. 概念粒度
+## 2. Concept Granularity
 
-- **一篇笔记对应一个机制，或回答一个问题。** 如果两组内容需要两套独立的机制来解释，就拆成两篇；如果只是例子、使用条件或子步骤不同，就留在同一篇。
-- **题目不是概念。** LeetCode 题号、作业题放进对应模式笔记的“例子”里。只有当一道题本身体现了一个可迁移的模式时，才以这个模式命名建一篇。
-- **跨来源聚合。** 不同日期、不同文件中属于同一机制的条目合并到一篇（141 + 142 → Floyd 判圈；高代的 5 条 → 极小多项式）。
-- **主动寻找关联。** 调试记录、错误清单通常是某个流程的陷阱（例如 CUDA 中的“kernel 里边界检查”对应 grid 向上取整多出的线程），把它们放进相应笔记的“陷阱”。
-- **孤立事实不成篇**（例如 `chmod` 的三位权限）：暂缓，或者以后归入一份速查表。
+- **One note corresponds to one mechanism or answers one question.** Split material requiring two independent mechanisms; keep different examples, applicability conditions, and substeps together.
+- **A problem is not a concept.** Put LeetCode numbers and assignment problems in the corresponding pattern note's examples. Create a note named after a transferable pattern only when the problem itself embodies one.
+- **Aggregate across sources.** Merge items about the same mechanism across dates and files (141 + 142 → Floyd cycle detection; five advanced-algebra entries → minimal polynomial).
+- **Actively identify connections.** Debugging records and error lists often describe pitfalls in a process. For example, CUDA kernel bounds checks address extra threads introduced by rounding the grid up; put them in that note's pitfalls.
+- **Isolated facts do not warrant notes** (e.g., the three permission digits in `chmod`). Defer them or incorporate them into a future reference sheet.
 
 ## 3. Core Idea
 
-用 1–2 句话说出这个概念**最关键的关系**，放在 `> [!abstract] Core Idea` callout 中，要求离开上下文也能读懂。
+State the concept's **most important relationship** in 1–2 sentences inside a `> [!abstract] Core Idea` callout. It must be understandable without surrounding context.
 
-写完后做三个测试，任何一个不通过就重写：
+Apply three tests; rewrite if any fails:
 
-1. **为什么测试**：它是否说出了“为什么是这样 / 解决了什么问题 / 为什么成立”，而不只是“它是什么、有哪些部分”？
-2. **删句测试**：逐句删除，删掉后读者没有损失的句子就去掉。“有助于理解…”“是一种重要的…”这类句子必删。
-3. **混淆测试**：这个概念最容易和什么混淆（SIMT vs SIMD、inclusive vs exclusive、必要 vs 充分）？Core Idea 或“陷阱”是否化解了这个混淆？
+1. **Why test**: does it explain why things work this way, what problem is solved, or why the relationship holds—not just what it is or its parts?
+2. **Deletion test**: remove any sentence whose deletion costs the reader nothing. Always remove filler such as “helps understand…” or “is an important…”.
+3. **Confusion test**: what is this most easily confused with (SIMT vs SIMD, inclusive vs exclusive, necessary vs sufficient)? Does Core Idea or Pitfalls resolve that confusion?
 
-| 弱 | 强 |
+| Weak | Strong |
 |---|---|
-| Grid、Block、Thread 组织 CUDA 的并行工作；block 内线程划分为 32 线程的 warp，按 SIMT 执行。区分两者有助于理解分工。 | Grid → Block → Thread 是程序员的**逻辑分解**：block 是可共享内存、可互相同步的最大协作单位，也是调度到 SM 的单位；warp（32 线程）是硬件的**实际执行单位**，同一 warp 共用一条指令流，所以分支分歧会让各路径串行执行。 |
-| Functor 将 `a -> b` 提升为 `f a -> f b`，须满足恒等律与复合律。 | Functor 是能“只变换里面的值、不改变外层结构”的类型构造器：`fmap` 把 `a -> b` 提升为 `f a -> f b`，两条定律正是“只动值、不动结构”的形式化。 |
+| Grid, block, and thread organize CUDA parallel work; block threads form 32-thread warps executing via SIMT. Distinguishing them helps understand task division. | Grid → Block → Thread is the programmer's **logical decomposition**: a block is the largest cooperation unit with shared memory and mutual synchronization, and the unit assigned to an SM. A warp (32 threads) is the hardware's **actual execution unit**; its threads share an instruction stream, so divergent branch paths execute serially. |
+| Functor lifts `a -> b` to `f a -> f b` and obeys identity and composition laws. | A Functor is a type constructor that lets you transform values without changing the surrounding structure: `fmap` lifts `a -> b` to `f a -> f b`, and its two laws formalize this value-only transformation. |
 
-Core Idea 可以由 AI 综合可靠资料写成；它是否被用户掌握，只体现在“我的理解”中。
+AI may synthesize Core Idea from reliable references. Whether the user understands it belongs only in My Understanding.
 
-## 4. 正文模块
+## 4. Body Modules
 
-模板中只有 Core Idea、我的理解、参考是固定的。其余模块按概念类型选用，不要为了凑齐而写空段：
+Only Core Idea, Connections, My Understanding, and References are fixed template components. Select other modules by concept type; do not add empty sections just to fill a checklist.
 
-| 类型 | 常用模块（按顺序） |
+| Type | Typical modules, in order |
 |---|---|
-| 数学 | 定义 → 关键定理/刻画（含一句证明思路）→ 例子与反例 → 常见误用 |
-| 算法/数据结构 | 触发信号（何时想到它）→ 核心不变量/原理 → 步骤与复杂度 → 例子（用户做过的题优先）→ 陷阱 |
-| 计算机系统 | 模型 → 机制 → 典型代码或流程 → 失效模式/常见 bug |
-| 编程语言 | 类型/语义 → 定律或规则 → 实例对比 → 陷阱 |
+| Mathematics | Definition → key theorem/characterization (with a one-sentence proof idea) → examples and counterexamples → common misuse |
+| Algorithms/data structures | Trigger signals (when to think of it) → core invariant/principle → steps and complexity → examples (prefer problems the user has solved) → pitfalls |
+| Computer systems | Model → mechanism → typical code or workflow → failure modes/common bugs |
+| Programming languages | Types/semantics → laws or rules → contrasting examples → pitfalls |
 
-写作要求：
+Writing requirements:
 
-- **例子优先用用户自己的原题或原场景**（例如 Find Repeats，而不是自编的“保留正数”）。题目规格可以查证时就查证并引用；查不到时才用通用例子，并写明假设。
-- 例子要小到能手算，并且真正演示机制，写出中间结果。
-- 公式、类型签名、代码保持最小；完整推导只在推导本身就是理解关键时才写。当原记录未限定编程语言时，代码示例优先使用 C、C++、Python 或 Haskell。
-- **数学内容统一使用 Obsidian LaTeX（MathJax）**：行内公式、数学符号、复杂度用 `$...$`（如 `$m_A$`、`$(x-\lambda)^s$`、`$uv^\top$`、`$O(n \log n)$`），独立推导或核心等式用 `$$...$$`；不要用纯文本或 Unicode 上下标（如 `m_A`、`uvᵀ`、`x²`）代替 LaTeX。Markdown 表格单元格内的公式用 `\mid`、`\lvert x \rvert` 代替裸 `|`，避免破坏表格分列。
-- “关联”中每个 `[[链接]]` 都要附一句说明具体联系。只链接本批笔记、Concepts 目录中已存在的笔记，或明确值得新建的概念。
-- Recall 写 1–3 个问题，要求重建机制或判断适用条件，不要考定义背诵。
+- **Prefer the user's original problem or scenario** (e.g., Find Repeats rather than an invented “keep positive numbers” example). Verify and cite problem specifications when available. Only use generic examples when specifications cannot be found, stating assumptions.
+- Keep examples small enough to calculate by hand; demonstrate the mechanism with intermediate results.
+- Minimize formulas, type signatures, and code. Include full derivations only when the derivation itself is essential to understanding. If Sources do not specify a language, prefer C, C++, Python, or Haskell.
+- **Use Obsidian LaTeX (MathJax) for all math**: `$...$` for inline formulas, symbols, and complexity (e.g., `$m_A$`, `$(x-\lambda)^s$`, `$uv^\top$`, `$O(n \log n)$`); `$$...$$` for standalone derivations or core equations. Do not substitute plain text or Unicode superscripts/subscripts (e.g., `m_A`, `uvᵀ`, `x²`) for LaTeX. Inside Markdown tables, use `\mid` or `\lvert x \rvert` instead of bare `|` to avoid splitting cells.
+- Write 1–3 Recall questions requiring reconstruction of mechanisms or judgments about applicability, not memorized definitions.
 
-## 5. 我的理解
+### 4.1 Connections: Typed Links
 
-只收录用户在 Sources 或回答中自己表达过的内容（见 SKILL.md 的证据原则）：
+Connections is required. It turns separate notes into a network: a later reader (or review) should be able to move from this note to what it depends on and what it explains.
+
+Format, one link per line, relation first (bold), then one sentence on the **specific** relationship:
 
 ```markdown
-## 我的理解
+## Connections
 
-- 💬「cudaMemcpy 应该会等待 kernel 执行完吧」（Q1，2026-10-25）
-  ✅ 在同一默认 stream 中，同步的 D2H 拷贝会排在 kernel 之后，并在拷贝完成后才返回。
-- 💬「验证极小多项式 → 代入 A」（S1 L22）
-  ◐ $p(A)=0$ 只是必要条件；还需要验证：去掉任何一个不可约因子后都不再零化 $A$。
-- ❓ 跨 stream 时如何建立依赖？
+- **prerequisite** [[Exclusive Scan]]: step 2 computes each kept element's output index as the exclusive prefix sum of the keep flags.
+- **contrasts with** [[Reduction]]: both combine with an associative operator, but reduction keeps only the total while scan keeps every prefix.
 ```
 
-- 原话照录（明显的错别字可以保留），后面注明来源。
-- 评价用 [workflow §4](workflow.md#4-评估与反馈) 的标记。用户在 Sources 中只是记录、没有解释的条目，可以列出原话，评为 ◐ 或不评级，并写明还缺的“为什么”。
-- ❓ 写具体、可回答的问题，并且只写对这个概念重要的。
-- 没有任何用户表达时写：“尚无自我解释记录。”再列出 1–2 个 ❓。
+Relation vocabulary and the paired relation written in the target note:
 
-## 6. 更新已有笔记
+| Relation (in this note) | Meaning | Reverse entry (in target note) | 中文 |
+|---|---|---|---|
+| **prerequisite** | The target must be understood first | **enables** | 前置 ↔ 支撑 |
+| **enables** | This is a prerequisite of the target | **prerequisite** | 支撑 ↔ 前置 |
+| **generalizes** | The target is a special case of this | **special case of** | 推广 ↔ 特例 |
+| **special case of** | This is a special case of the target | **generalizes** | 特例 ↔ 推广 |
+| **contrasts with** | Easily confused or a meaningful alternative | **contrasts with** | 对比 |
+| **applies** | Uses the target as a tool | **applied in** | 应用 ↔ 被应用于 |
+| **applied in** | Is used as a tool by the target | **applies** | 被应用于 ↔ 应用 |
+| **same pattern as** | Same structure in a different setting | **same pattern as** | 同构 |
 
-1. 先读已有笔记全文。
-2. 只做最小修改：增加新的例子、陷阱、“我的理解”条目、来源；Core Idea 只在有错或有明显更好的表述时才修改，并说明理由。
-3. 已有笔记不符合模板时，不要整体重排格式。
-4. 新旧内容冲突时，两种说法都保留，并标出需要核实的地方。
-5. 以 unified diff 的形式展示，用户确认后用 edit 工具写入；同时在 `sources` 中追加本批来源。
+Rules:
 
-## 7. 命名与 frontmatter
+- Use the note's language for the sentence. In Chinese notes, the Chinese relation label may be used instead of the English one; keep whichever label style the note already uses.
+- The sentence must say **what** connects them (the shared step, invariant, condition, or difference). “Related to X” or “see also” is not a connection.
+- Link only notes in this batch, existing Concepts notes, or concepts clearly worth creating (red links, which also go to the map's Open Threads).
+- Aim for at least two genuine links in a new note. If none exist yet, write “No strong existing link yet.” plus a ❓ about the missing relationship; never add filler links.
+- Order links by usefulness: prerequisites first, then contrasts, then everything else.
+- Legacy Connections entries without a relation label remain valid; add a label only when you are already editing that line.
 
-- 文件名就是概念的常用名（例如 `Stream Compaction.md`、`极小多项式.md`）；另一种语言的名称和缩写放进 `aliases`，查找已有笔记依赖它。
-- `domain` 写学科（如 `parallel-computing`、`linear-algebra`、`haskell`、`algorithms`、`cpp`）；`tags` 可选。
-- `mastery` 根据“我的理解”自动计算：
-  - `shaky`：存在尚未纠正的 `✗`（曾有错误理解），或尚无任何自我解释记录；
-  - `partial`：无未解决的 `✗`，有至少一条 `✅` 或 `◐`，但仍有 `◐` 或 `❓` 待解决；
-  - `solid`：核心机制已有 `✅` 解释，且没有遗留的 `✗`、`◐` 或关键 `❓`。
-- `last_reviewed`：如果本轮用户回答了针对该概念的问题，填当天日期 `YYYY-MM-DD`；如果跳过了提问或仅从旧记录提炼而未回答问题，留空。
-- `sources` 写 flomo 原文件的 wikilink（`"[[2026-10-25_09-21-10]]"`）。
-- `status: draft`。用户审阅后自己改为 `reviewed`；整理模式不修改这个状态。
+## 5. My Understanding
 
-## 8. 定稿自检
+Include only content the user actually expressed in Sources or responses (see the evidence principle in `SKILL.md`). Preserve existing headings, including `## 我的理解`, when editing historical notes.
 
-- [ ] Core Idea 通过了三个测试；
-- [ ] 每个模块都在为 Core Idea 服务，没有重复解释同一关系；
-- [ ] 正文没有学习过程的叙述，没有 `[C1]` 一类的标记；
-- [ ] 关键事实已核验并写在“参考”里，未核验的标了“（待核验）”；
-- [ ] “我的理解”中每一条都能追溯到用户原话；
-- [ ] 本批每个条目都在 `_triage` 中有去向。
+```markdown
+## My Understanding
+
+- 💬 “cudaMemcpy should wait for the kernel to finish, right?” (Q1, 2026-10-25)
+  ✅ In the same default stream, a synchronous D2H copy follows the kernel and returns only after the copy completes.
+- 💬 “Verify minimal polynomial → substitute A” (S1 L22)
+  ◐ $p(A)=0$ is only necessary; also verify that removing any irreducible factor makes it cease to annihilate $A$.
+- ❓ How are dependencies established across streams?
+```
+
+These are illustrative examples, not evidence about the current user.
+
+- Quote verbatim, preserving obvious typos if present, and identify the source.
+- Use the marks in [workflow §5](workflow.md#5-assessment-and-feedback). If Sources merely record a fact without explanation, quote it with ◐ or no grade and state the missing “why”.
+- Make ❓ entries specific, answerable, and important to the concept.
+- If there is no user expression, write “No self-explanation recorded yet.” and add 1–2 ❓ questions.
+
+## 6. Update Existing Notes
+
+1. Read the entire existing note first.
+2. Make minimal changes: add examples, pitfalls, My Understanding entries, and sources. Change Core Idea only if incorrect or clearly improvable, explaining why.
+3. Do not reformat an entire note merely because it does not follow the template.
+4. If old and new content conflict, retain both and flag what needs verification.
+5. Show a unified diff; after confirmation, apply with `edit`. Append this batch's sources to `sources`.
+
+## 7. Naming and Frontmatter
+
+- Use the concept's common name as its filename (e.g., `Stream Compaction.md`, `Minimal Polynomial.md`). Put other-language names and abbreviations in `aliases`, which supports existing-note searches. Do not rename existing notes merely to match the language of these instructions.
+- Use `domain` for the subject (e.g., `parallel-computing`, `linear-algebra`, `haskell`, `algorithms`, `cpp`); `tags` are optional.
+- Compute `mastery` from My Understanding:
+  - `shaky`: unresolved `✗` (a prior misconception), or no self-explanation recorded yet.
+  - `partial`: no unresolved `✗`, at least one `✅` or `◐`, but remaining `◐` or `❓`.
+  - `solid`: a `✅` explanation of the core mechanism, with no remaining `✗`, `◐`, or important `❓`.
+- `last_reviewed`: today's `YYYY-MM-DD` if the user answered a question about this concept this round. Leave empty if questions were skipped or the note was extracted only from old records without new answers.
+- `sources`: wikilinks to original flomo files (e.g., `"[[2026-10-25_09-21-10]]"`).
+- `status: draft`. The user may change it to `reviewed` after review; organization mode does not change it.
+
+## 8. Final Checklist
+
+- [ ] Core Idea passes all three tests.
+- [ ] Every module supports Core Idea without repeating the same relationship.
+- [ ] The body contains no learning-process narrative or markers such as `[C1]`.
+- [ ] Key facts are verified and cited in References; unverified ones are marked “(verification pending)”.
+- [ ] Every My Understanding entry traces to the user's actual words.
+- [ ] Every item in this batch has a disposition in `_triage`.
+- [ ] Connections uses typed links with specific sentences; new notes have ≥ 2 genuine links or say why not.
+- [ ] Reverse links for existing notes are prepared as diffs.
+- [ ] Each new note has a map placement (existing MOC entry, new MOC draft, or “no map yet”).
+
+## 9. Maps of Content (MOCs)
+
+A map is a **structure note**: an ordered, annotated path through one domain, not an index. It answers “in what order should I revisit these notes, and why does each matter here?” Use the [MOC template](../assets/moc.md).
+
+- **One per domain**, named `MOC — <Domain>.md` using the readable domain name (e.g., `MOC — Parallel Computing.md`, matching `domain: parallel-computing`). Put the slug and Chinese name in `aliases`.
+- **Frontmatter**: `type: moc`, `domain`, `aliases`, `created`, `updated`. No `mastery`, `status`, or `last_reviewed`.
+- **Scope**: a `> [!abstract] Scope` callout with 1–2 sentences on what the domain covers here and the central thread linking its notes.
+- **Sections**: 2–5 sub-topics or stages. Inside each, a numbered list in learning order:
+  ```markdown
+  1. [[CUDA 执行模型]] — the grid/block/warp model every later note assumes.
+  2. [[CUDA 合并访存与扇区覆盖]] — why warp-level access patterns decide memory throughput.
+  ```
+  The annotation states the note's contribution in this path, not a copy of its Core Idea.
+- **Cross-Domain Bridges**: notes in other maps that this domain uses or shares a pattern with, each with one sentence.
+- **Open Threads**: concepts the path needs but no note covers yet, and related Deferred items (with `_triage` file). These become candidates for future batches.
+- Keep maps short; split a section into its own sub-map only when it exceeds ~12 entries, linking the sub-map from the parent.
+- When updating a map, change only the affected entries and `updated`; do not reorder unrelated sections.

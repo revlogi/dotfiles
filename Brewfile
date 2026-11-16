@@ -1,7 +1,6 @@
 # Install or reconcile this manifest with `brew bundle`.
 
 tap "narugit/tap"   # smctemp
-tap "oven-sh/bun"
 
 # Development
 brew "git"
@@ -10,8 +9,9 @@ brew "make"
 brew "cmake"
 brew "ispc" # CS149 SIMD programming
 brew "node"
-brew "oven-sh/bun/bun" # Pi extension tests
+brew "bun" # Pi extension tests
 brew "pnpm"
+brew "uv"
 brew "openjdk"
 brew "zig"
 brew "zls"
@@ -29,13 +29,13 @@ brew "yazi"
 brew "fastfetch"
 brew "ncdu"
 brew "stow"
-brew "syncthing"
+brew "syncthing", restart_service: :changed
 brew "btop"
 brew "narugit/tap/smctemp"
 brew "jq"
 brew "wget"
 brew "mole"
-brew "tldr"
+brew "tlrc"
 brew "bat"
 brew "glow"
 brew "eza"
@@ -44,6 +44,8 @@ brew "lazygit"
 
 # Editor and developer tools
 brew "neovim"
+brew "clang-format"
+brew "ormolu"
 brew "stylua"
 brew "swiftformat"
 brew "ruff"
@@ -61,6 +63,7 @@ cask "orbstack"
 cask "hammerspoon"
 cask "karabiner-elements"
 cask "emacs-app"
+cask "anki"
 cask "obsidian"
 cask "typora"
 

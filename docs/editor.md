@@ -56,6 +56,38 @@ Use `ghc --version`, `cabal --version`, and `haskell-language-server-wrapper
 --version` to check the toolchain, and `:checkhealth vim.lsp` for editor attachment.
 Toolchains and build outputs stay machine-local.
 
+## Racket / PLAI 3.2.5
+
+PLAI 3.2.5 uses `#lang plait` for much of its interpreter code and `#lang racket`
+for some chapters, including macros. Keep the language declaration from each
+chapter at the top of your `.rkt` file.
+
+Install Racket from <https://download.racket-lang.org/>, then run:
+
+```bash
+raco pkg install --auto plait racket-langserver
+```
+
+The macOS application installer is detected by the login shell and Neovim.
+On Linux, put Racket's `bin` directory on PATH. Neovim uses native Racket
+highlighting/indentation and the Racket language server for diagnostics,
+completion, and navigation. Restart Neovim after installing the packages.
+
+In a `.rkt` buffer, `Space r r` saves and runs the file in a terminal split;
+`Space r i` saves and loads it into a fresh interactive Racket session. These
+commands run in the source file's directory. Use `Esc Esc` to leave terminal
+input mode and `:q` to close the split. Start a new session after editing to reload
+definitions. DrRacket remains useful for the book's graphical Step demonstrations.
+
+For a quick check, save and run:
+
+```racket
+#lang plait
+(define (double [x : Number]) : Number
+  (+ x x))
+(test (double 21) 42)
+```
+
 ## AI chat
 
 CodeCompanion chat authenticates through ChatGPT when first opened. Its ACP

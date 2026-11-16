@@ -1,7 +1,10 @@
 local lsp_utils = require 'lsp.init'
 
 local function setup()
-  if vim.fn.executable 'xcrun' ~= 1 then
+  local swiftly_bin = vim.fn.expand '~/.swiftly/bin'
+  local sourcekit = swiftly_bin .. '/sourcekit-lsp'
+
+  if vim.fn.executable(sourcekit) ~= 1 then
     return
   end
 
@@ -13,7 +16,10 @@ local function setup()
 
     vim.lsp.start({
       name = 'sourcekit',
-      cmd = { 'xcrun', 'sourcekit-lsp' },
+      cmd = { 'sourcekit-lsp' },
+      cmd_env = {
+        PATH = swiftly_bin .. ':' .. (vim.env.PATH or ''),
+      },
       root_dir = root or fallback,
       capabilities = lsp_utils.get_capabilities(),
     }, { bufnr = buf })

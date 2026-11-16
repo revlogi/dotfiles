@@ -1,0 +1,17 @@
+{
+  "name": "pi-pstack",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Four focused pstack skills adapted for Pi: unslop, how, why, and teach",
+  "license": "MIT",
+  "type": "module",
+  "keywords": ["pi-package"],
+  "scripts": {
+    "test": "node --test tests/package.test.mjs",
+    "test:live": "node tests/live.mjs"
+  },
+  "pi": {
+    "skills": ["./skills/unslop", "./skills/how", "./skills/why", "./skills/teach"],
+    "prompts": ["./prompts/unslop.md", "./prompts/how.md", "./prompts/why.md", "./prompts/teach.md"]
+  }
+}

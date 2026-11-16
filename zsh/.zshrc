@@ -68,6 +68,8 @@ alias sz='exec zsh'
 alias nv='nvim'
 alias t='tmux'
 
+alias nn='NVIM_APPNAME=nvim-next nvim'
+
 mkcd() {
   mkdir -p -- "$1" && cd -- "$1"
 }
