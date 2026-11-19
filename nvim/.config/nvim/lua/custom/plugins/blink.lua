@@ -1,3 +1,10 @@
+local no_preselect = {
+  'racket',
+  'haskell',
+  'verilog',
+  'systemverilog',
+}
+
 require('blink.cmp').setup {
   keymap = {
     preset = 'none',
@@ -34,6 +41,13 @@ require('blink.cmp').setup {
     nerd_font_variant = 'mono',
   },
   completion = {
+    list = {
+      selection = {
+        preselect = function()
+          return not vim.tbl_contains(no_preselect, vim.bo.filetype)
+        end,
+      },
+    },
     documentation = { auto_show = false, auto_show_delay_ms = 500 },
   },
   sources = {

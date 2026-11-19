@@ -85,6 +85,10 @@
       "rev": "31e3c38ce9b29781e4422fc0322eb0a21f4e8668",
       "src": "https://github.com/folke/todo-comments.nvim"
     },
+    "vim-haskell-indent": {
+      "rev": "47d3e88aff898b360e6f8872394631847c0b4adc",
+      "src": "https://github.com/itchyny/vim-haskell-indent"
+    },
     "vim-tmux-navigator": {
       "rev": "e41c431a0c7b7388ae7ba341f01a0d217eb3a432",
       "src": "https://github.com/christoomey/vim-tmux-navigator"

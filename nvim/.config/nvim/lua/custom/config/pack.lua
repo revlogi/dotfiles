@@ -36,6 +36,7 @@ vim.pack.add({
   { src = 'https://github.com/nvim-telescope/telescope-fzf-native.nvim' },
   { src = 'https://github.com/nvim-telescope/telescope-ui-select.nvim' },
   { src = 'https://github.com/nvim-treesitter/nvim-treesitter' },
+  { src = 'https://github.com/itchyny/vim-haskell-indent' },
   { src = 'https://github.com/MeanderingProgrammer/render-markdown.nvim' },
   { src = 'https://github.com/folke/lazydev.nvim' },
   { src = 'https://github.com/saghen/blink.cmp', version = vim.version.range '1' },
