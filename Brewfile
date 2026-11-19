@@ -13,6 +13,8 @@ brew "bun" # Pi extension tests
 brew "pnpm"
 brew "uv"
 brew "openjdk"
+brew "swiftly" # Swift toolchain manager
+brew "rustup" # Rust toolchains, Cargo, rust-analyzer, rustfmt, and Clippy
 brew "zig"
 brew "zls"
 brew "tree-sitter-cli"
@@ -51,10 +53,9 @@ brew "swiftformat"
 brew "ruff"
 brew "basedpyright"
 brew "ffmpeg"
-brew "tesseract"
 
 # AI coding agents
-npm "@openai/codex"
+cask "antigravity-cli"
 npm "@earendil-works/pi-coding-agent"
 
 # Applications
@@ -62,10 +63,6 @@ cask "kitty"
 cask "orbstack"
 cask "hammerspoon"
 cask "karabiner-elements"
-cask "emacs-app"
-cask "anki"
-cask "obsidian"
-cask "typora"
 
 # Fonts
 cask "font-jetbrains-mono-nerd-font"

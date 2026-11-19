@@ -22,11 +22,8 @@
   "defaultModel": "gpt-6.1-sol",
   "defaultThinkingLevel": "medium",
   "enabledModels": [
-    "openai/gpt-6.1-sol",
-    "openai/gpt-5.6-sol",
-    "openai/gpt-5.6-terra",
-    "local-mlx//Users/liuguangxi/.local/share/qwen35-4b-uncensored-4bit",
-    "openai-codex/gpt-6.1-sol"
+    "openai-codex/gpt-6.2-sol",
+    "openai-codex/gpt-6.2-astra"
   ],
   "packages": [
     "./packages-local/pi-engineering-workflow",

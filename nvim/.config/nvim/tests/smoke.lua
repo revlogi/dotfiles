@@ -16,6 +16,10 @@ local ok, err = xpcall(function()
 
   assert(vim.g.colors_name == 'catppuccin-mocha' or vim.g.colors_name == 'catppuccin-latte')
   assert(vim.lsp.is_enabled 'lua_ls')
+  if vim.fn.executable 'rust-analyzer' == 1 then
+    assert(vim.lsp.is_enabled 'rust_analyzer')
+    assert(vim.lsp.config.rust_analyzer.settings['rust-analyzer'].check.command == 'clippy')
+  end
   assert(vim.lsp.config.lua_ls.capabilities.textDocument.completion.completionItem.snippetSupport)
   assert(package.loaded['telescope._extensions.ui-select'], 'Telescope UI-select extension is missing')
   if vim.fn.executable 'make' == 1 then
@@ -29,7 +33,7 @@ local ok, err = xpcall(function()
   end
 
   -- Filetype settings must survive eager plugin initialization.
-  for ft, width in pairs { c = 4, cpp = 4, lua = 2, haskell = 2, lhaskell = 2, racket = 2, verilog = 4, systemverilog = 4 } do
+  for ft, width in pairs { c = 4, cpp = 4, rust = 4, lua = 2, haskell = 2, lhaskell = 2, racket = 2, verilog = 4, systemverilog = 4 } do
     vim.cmd.enew()
     vim.bo.filetype = ft
     assert(vim.bo.shiftwidth == width and vim.bo.tabstop == width, ft .. ' indentation changed')

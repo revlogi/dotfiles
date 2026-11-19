@@ -12,7 +12,7 @@ macOS is the primary environment; portable terminal packages also support Linux 
 | Terminal | Kitty with Catppuccin themes |
 | Multiplexer | tmux with `C-f` prefix and Neovim navigation |
 | Automation | Hammerspoon and Karabiner-Elements on macOS |
-| Tooling | GitHub CLI, Codex CLI, and Pi with Anki and engineering packages |
+| Tooling | GitHub CLI, Antigravity CLI, and Pi with Anki and engineering packages |
 | Maintenance | `dot` command for editing, reloading, checking, and cheatsheets |
 
 ## Setup

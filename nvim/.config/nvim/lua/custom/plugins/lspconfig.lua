@@ -65,6 +65,19 @@ if vim.fn.executable 'haskell-language-server-wrapper' == 1 then
   vim.lsp.enable 'hls'
 end
 
+-- Keep Rust tools aligned with rust-toolchain.toml through rustup, not Mason.
+if vim.fn.executable 'rust-analyzer' == 1 then
+  vim.lsp.config('rust_analyzer', {
+    capabilities = lsp_utils.get_capabilities(),
+    settings = {
+      ['rust-analyzer'] = {
+        check = { command = 'clippy' },
+      },
+    },
+  })
+  vim.lsp.enable 'rust_analyzer'
+end
+
 local tools = {
   'shfmt',
   'shellcheck',

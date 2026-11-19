@@ -1,6 +1,7 @@
 local platform = require 'custom.utils.platform'
 local parsers = {
   'haskell',
+  'rust',
   'bash',
   'json',
   'c',
@@ -22,6 +23,7 @@ local parsers = {
 }
 local filetypes = {
   'haskell',
+  'rust',
   'sh',
   'bash',
   'json',
@@ -45,6 +47,7 @@ local filetypes = {
   'vimdoc',
 }
 local indent_filetypes = {
+  'rust',
   'sh',
   'bash',
   'json',

@@ -3,6 +3,7 @@ require('guess-indent').setup {
   override_editorconfig = false,
   filetype_exclude = {
     'racket',
+    'bluespec',
     'haskell',
     'lhaskell',
     'c',

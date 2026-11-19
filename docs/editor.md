@@ -7,7 +7,7 @@ before running `dot check nvim`.
 
 ## Languages and tools
 
-Neovim configures Python, C/C++, JavaScript/TypeScript (including JSX/TSX),
+Neovim configures Python, C/C++, Rust, JavaScript/TypeScript (including JSX/TSX),
 Swift on macOS, Verilog/SystemVerilog, Lua, and Vimscript/vimrc. Lua includes
 LazyDev completion and StyLua formatting. HTML/CSS and Markdown have Tree-sitter
 highlighting and Prettierd formatting; Markdown rendering also supports AI chat.
@@ -27,6 +27,54 @@ formatters). For optional web/shell editing, install Node/npm on that host and u
 `:MasonInstall json-lsp html-lsp css-lsp bash-language-server shellcheck shfmt prettierd`.
  Oil is the file manager (`-`); Telescope provides
 search. `<leader>e` always shows diagnostics. Vim is a plugin-free fallback.
+
+## Rust
+
+Homebrew installs the rustup manager, not a toolchain. After `brew bundle`, start a
+new Zsh session and initialize the stable toolchain on each Mac:
+
+```bash
+rustup toolchain install stable --profile default --component rust-analyzer,rust-src
+rustup default stable
+rustup component add rust-analyzer rust-src rustfmt clippy
+rustc --version
+cargo --version
+rust-analyzer --version
+```
+
+Zsh adds Cargo's bin directory and Homebrew's keg-only rustup bin directory to
+PATH (Apple Silicon and Intel). On Linux, install rustup using its official
+instructions; the same Cargo bin path is already configured. Do not also install
+Homebrew's `rust` or `rust-analyzer`: rustup owns the compiler and editor tools.
+Toolchains, Cargo caches, and build outputs remain machine-local.
+
+Open Neovim from a Cargo project directory. Rust uses rust-analyzer for completion,
+navigation, code actions, and Clippy diagnostics, Tree-sitter for highlighting and
+indentation, and rustfmt on explicit save or `<leader>f`. Rust uses four spaces.
+Mason does not install Rust tooling. Check attachment with `:checkhealth vim.lsp`
+and formatting with `:ConformInfo`.
+
+```bash
+cargo new hello-rust
+cd hello-rust
+cargo run
+cargo test
+cargo clippy --all-targets -- -D warnings
+cargo fmt --check
+nvim src/main.rs
+```
+
+For projects with `rust-toolchain.toml`, install the requested toolchain and its
+`rust-analyzer`, `rust-src`, `rustfmt`, and `clippy` components as needed. Rustup
+proxies select the project toolchain; formatting respects the Cargo edition and
+project rustfmt configuration. Use `rustup update stable` to update the default
+stable toolchain. No debugger plugin is included in this basic setup.
+
+After installation, run the end-to-end editor check from the Neovim config directory:
+
+```bash
+nvim --headless '+luafile tests/rust.lua' +qa
+```
 
 ## Haskell
 
@@ -55,6 +103,30 @@ uses HLS for formatting.
 Use `ghc --version`, `cabal --version`, and `haskell-language-server-wrapper
 --version` to check the toolchain, and `:checkhealth vim.lsp` for editor attachment.
 Toolchains and build outputs stay machine-local.
+
+## Bluespec Classic
+
+`.bs` files use a dedicated `bluespec` filetype, overriding Neovim's default
+BrighterScript detection. This is **Bluespec Classic** (Haskell-like syntax), not
+Bluespec SystemVerilog (`.bsv`). Native syntax highlighting reuses Haskell's
+lexical rules with a few Classic keywords; it is approximate, not a Classic
+parser. Editing uses two spaces, autoindent, and `--` / `{- -}` comments. Use
+`gcc` to toggle a line comment.
+
+Classic files do not attach HLS, use the Haskell Tree-sitter parser, or run
+Ormolu/Verilog formatters on save. No Classic language server, semantic
+completion, or automatic formatter is configured. Existing Haskell and Verilog
+support remains separate. This is editor-only support: install `bsc` separately
+on the machine where you compile, and keep build commands/options in each
+project's Makefile (`:make` from the project directory).
+
+Restart Neovim and open a `.bs` file. Check `:set filetype?` (expected
+`bluespec`), `:set shiftwidth?` (expected `2`), and `:ConformInfo` (no formatter).
+From the Neovim config directory, run:
+
+```bash
+nvim --headless '+luafile tests/bluespec.lua' +qa
+```
 
 ## Racket / PLAI 3.2.5
 

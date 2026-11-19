@@ -69,22 +69,11 @@ venv
 !/hammerspoon/**
 !/karabiner
 !/karabiner/**
-// Retired roots stay allowed until deletions have reached every peer.
-!/fedora
-!/fedora/**
-!/kde
-!/kde/**
-!/input-remapper
-!/input-remapper/**
-!/server
-!/server/**
+!/yazi
+!/yazi/**
 !/docs
 !/docs/**
-!/scripts
-!/scripts/**
 !/README.md
-!/AGENTS.md
 !/Brewfile
 !/sync-ignore.txt
-!/syncthing-folder.json
 *

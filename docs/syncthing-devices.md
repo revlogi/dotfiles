@@ -112,7 +112,7 @@ npm --prefix ~/.pi/agent/packages-local/pi-anki-english ci
 `brew bundle` 已包含 Pi 测试所需的 Bun。认证和 AnkiConnect 各机单独配置，不要从 mini 搬认证文件：
 
 - GitHub CLI：运行 `gh auth login`。
-- Codex：运行 `codex`，首次启动时按提示选择支持的登录方式。
+- Antigravity CLI：运行 `agy`，首次启动时按提示完成登录。
 - Pi：使用 `/login` 命令。
 - Neovim CodeCompanion：首次打开聊天时通过 ChatGPT 认证，详见[编辑器说明](editor.md#ai-chat)。
 

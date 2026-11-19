@@ -44,6 +44,7 @@ require('conform').setup {
   },
   formatters_by_ft = {
     haskell = { 'ormolu' },
+    rust = { 'rustfmt' },
     json = { 'prettierd' },
     jsonc = { 'prettierd' },
     -- shfmt supports POSIX/Bash; never apply it to Zsh.

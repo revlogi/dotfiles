@@ -67,8 +67,11 @@ alias v='vim'
 alias sz='exec zsh'
 alias nv='nvim'
 alias t='tmux'
+alias y='yazi'
 
 alias nn='NVIM_APPNAME=nvim-next nvim'
+alias ss='stow --simulate --verbose -t ~'
+alias st='stow -t ~'
 
 mkcd() {
   mkdir -p -- "$1" && cd -- "$1"
@@ -113,7 +116,8 @@ crun() {
     "$([[ "$out" == /* ]] && echo "$out" || echo "./$out")"
 }
 
-
+export EDITOR=nvim
+export VISUAL=nvim
 
 if (( ${+commands[zoxide]} )); then
   eval "$(zoxide init zsh)"

@@ -86,9 +86,10 @@ My Understanding contains only content the user **actually expressed** in Source
 
 ## Tools
 
-- Use `ask_user`: `question` for one question; `questions` for 2–4 independent questions. Each batch entry may set `context`, `options`, `allowMultiple`, and `allowFreeform`; place these fields on entries, not at the top level. Calls are synchronous and return answers or `cancelled`.
-- If the tool is unavailable or returns “Ask requires interactive mode” (e.g., `-p` mode), list the questions in conversation and end the turn. Do not treat unanswered questions as answered.
-- No additional state files are needed; the Pi session retains context.
+- **Pi (`ask_user`)**: use `question` for one question; `questions` for 2–4 independent questions. Each batch entry may set `context`, `options`, `allowMultiple`, and `allowFreeform`; place these fields on entries, not at the top level. Calls are synchronous and return answers or `cancelled`.
+- **Antigravity CLI (`ask_question`)**: use `ask_question` with `is_multi_select: true` for selection steps (choosing concepts to expand in Triage or drafts to promote in Mode C, putting `(Recommended) Expand all` / `(Recommended) Promote all` first). For free-response questions (Ask, Review/Quiz, Connect), output the numbered questions directly in conversation and end the turn to wait for the user's reply. Use `edit_file` where instructions refer to `edit`.
+- If an interactive question tool is unavailable or returns “Ask requires interactive mode” (e.g., `-p` mode), list the questions in conversation and end the turn. Do not treat unanswered questions as answered.
+- No additional state files are needed; the session retains context.
 
 ## Reference Examples
 

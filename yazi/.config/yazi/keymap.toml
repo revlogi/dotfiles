@@ -1,0 +1,4 @@
+[[mgr.prepend_keymap]]
+on = "o"
+run = "create --dir"
+desc = "Create a directory"
