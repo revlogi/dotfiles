@@ -1,4 +1,4 @@
-local platform = require 'custom.utils.platform'
+local platform = require 'revlogi.utils.platform'
 
 local cmd = { 'clangd', '--background-index', '--header-insertion=iwyu' }
 if platform.is_remote then

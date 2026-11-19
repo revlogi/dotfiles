@@ -37,7 +37,7 @@ local function set_enabled(value)
 end
 
 function M.setup()
-  local group = vim.api.nvim_create_augroup('custom-autosave', { clear = true })
+  local group = vim.api.nvim_create_augroup('revlogi-autosave', { clear = true })
 
   vim.api.nvim_create_autocmd('InsertLeave', {
     group = group,

@@ -19,6 +19,9 @@ require('conform').setup {
   notify_on_error = true,
   notify_no_formatters = true,
   format_on_save = function(bufnr)
+    if vim.b[bufnr].disable_autoformat then
+      return
+    end
     return {
       timeout_ms = format_timeout(bufnr),
       lsp_format = lsp_format(bufnr),

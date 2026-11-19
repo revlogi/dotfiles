@@ -1,8 +1,7 @@
 -- Leaders and editor defaults must precede keymaps and plugin setup.
-require 'custom.config.options'
-require 'custom.config.keymaps'
-require 'custom.config.autocmds'
-require 'custom.config.pack'
-
--- Keep final overrides after plugins have registered their defaults.
-require 'custom.config.after'
+require 'revlogi.config.options'
+require 'revlogi.config.keymaps'
+require 'revlogi.config.autocmds'
+require('revlogi.config.autosave').setup()
+require('revlogi.config.commands').setup()
+require 'revlogi.config.pack'

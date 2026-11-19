@@ -20,6 +20,9 @@ function M.setup()
       end)
     )
   end, { desc = 'Check current Zsh buffer syntax without executing it', force = true })
+  vim.api.nvim_create_user_command('ToggleFormatter', function()
+    require('revlogi.utils.editor').toggle_formatter()
+  end, { desc = 'Toggle format-on-save for current buffer', force = true })
 end
 
 return M

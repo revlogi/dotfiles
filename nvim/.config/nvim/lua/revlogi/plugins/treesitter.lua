@@ -1,4 +1,4 @@
-local platform = require 'custom.utils.platform'
+local platform = require 'revlogi.utils.platform'
 
 local parsers = {
   'haskell',

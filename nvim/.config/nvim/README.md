@@ -5,12 +5,14 @@ There are no deferred plugin loaders, command proxies, or plugin-spec wrappers.
 
 ## Startup order
 
-`init.lua` loads editor options, keymaps, autocmds, packages, and final overrides.
-`lua/custom/config/pack.lua` lists every package and explicitly loads its
-configuration from `lua/custom/plugins/`. Dependencies are listed alongside
-plugins, not discovered automatically. Treesitter precedes Markdown rendering;
-Lazydev and Blink precede LSP setup. Lazydev provides Lua development support;
-it is unrelated to lazy.nvim and is also configured at startup.
+`init.lua` loads editor options, keymaps, autocmds, auto-save, user commands,
+and packages. `lua/revlogi/config/pack.lua` lists every package and explicitly
+loads its configuration from `lua/revlogi/plugins/`. Dependencies are listed
+alongside plugins, not discovered automatically. Treesitter precedes Markdown
+rendering; Lazydev and Blink precede LSP setup. Lazydev provides Lua development
+support; it is unrelated to lazy.nvim and is also configured at startup.
+Filetype overrides live in `filetype.lua` and `after/ftplugin/`, and non-default
+LSP server overrides live in `lsp/`.
 
 ## Plugin maintenance
 
@@ -65,7 +67,7 @@ will also use that app's data directory.
 ```sh
 stylua --check .
 nvim --headless +qa
-nvim --headless '+checkhealth dotfiles' +qa
+nvim --headless '+checkhealth revlogi' +qa
 nvim --headless '+luafile tests/smoke.lua' +qa
 ```
 

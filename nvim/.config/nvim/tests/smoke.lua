@@ -7,12 +7,13 @@ local ok, err = xpcall(function()
   for _, name in ipairs { 'conform', 'nvim-autopairs', 'render-markdown', 'lazydev', 'blink.cmp', 'telescope', 'which-key', 'todo-comments' } do
     assert(package.loaded[name], name .. ' was not loaded at startup')
   end
-  for _, name in ipairs { 'Oil', 'ConformInfo', 'TmuxNavigateLeft', 'AutoSaveToggle', 'ZshCheck' } do
+  for _, name in ipairs { 'Oil', 'ConformInfo', 'TmuxNavigateLeft', 'AutoSaveToggle', 'ToggleFormatter', 'ZshCheck' } do
     assert(vim.fn.exists(':' .. name) == 2, name .. ' command is missing')
   end
-  for _, key in ipairs { '<leader>f', '<leader>sf', '<C-h>', '<C-j>', '<C-k>', '<C-l>', '<C-\\>' } do
+  for _, key in ipairs { '<leader>f', '<leader>sf', '<leader>tf', '<leader>bd', '<C-h>', '<C-j>', '<C-k>', '<C-l>', '<C-\\>' } do
     assert(vim.fn.maparg(key, 'n') ~= '', key .. ' mapping is missing')
   end
+  assert(vim.fn.maparg('<leader>cc', 'x') ~= '', '<leader>cc visual mapping is missing')
 
   assert(vim.g.colors_name == 'catppuccin-mocha' or vim.g.colors_name == 'catppuccin-latte')
   assert(vim.lsp.is_enabled 'lua_ls')
@@ -65,9 +66,31 @@ local ok, err = xpcall(function()
   vim.api.nvim_exec_autocmds('InsertLeave', { buffer = 0 })
   assert(vim.fn.readfile(path)[1] == 'local value={1,2}', 'Disabled auto-save still wrote the file')
   vim.cmd.AutoSaveEnable()
+  vim.cmd.ToggleFormatter()
   vim.cmd.write()
-  assert(writes == 2, 'Explicit write did not invoke write hooks')
+  assert(vim.fn.readfile(path)[1] == 'local value={3,4}', 'ToggleFormatter did not suppress format-on-save')
+  vim.cmd.ToggleFormatter()
+  vim.cmd.write()
+  assert(writes == 4, 'Explicit write did not invoke write hooks')
   assert(vim.fn.readfile(path)[1] == 'local value = { 3, 4 }', 'Explicit write did not run StyLua')
+
+  -- Exercise editor utilities: copy_as_codeblock and delete_hidden_buffers.
+  local editor = require 'revlogi.utils.editor'
+  vim.fn.setpos("'<", { 0, 1, 1, 0 })
+  vim.fn.setpos("'>", { 0, 1, 1, 0 })
+  editor.copy_as_codeblock()
+  local codeblock = vim.fn.getreg '+'
+  assert(codeblock:find('```lua filename="', 1, true), 'copy_as_codeblock missing header')
+  assert(codeblock:find('local value = { 3, 4 }', 1, true), 'copy_as_codeblock missing buffer lines')
+
+  local hidden_clean = vim.api.nvim_create_buf(true, false)
+  local hidden_dirty = vim.api.nvim_create_buf(true, false)
+  vim.api.nvim_buf_set_lines(hidden_dirty, 0, -1, false, { 'unsaved' })
+  editor.delete_hidden_buffers()
+  assert(not vim.api.nvim_buf_is_valid(hidden_clean), 'delete_hidden_buffers kept a clean hidden buffer')
+  assert(vim.api.nvim_buf_is_valid(hidden_dirty), 'delete_hidden_buffers deleted a modified buffer')
+  vim.api.nvim_buf_delete(hidden_dirty, { force = true })
+
   vim.cmd.bwipeout()
   vim.fn.delete(path)
 
@@ -89,7 +112,7 @@ local ok, err = xpcall(function()
 
   vim.wait(50)
   assert(vim.o.clipboard == 'unnamedplus')
-  if require('custom.utils.platform').is_remote then
+  if require('revlogi.utils.platform').is_remote then
     assert(vim.g.clipboard.name == 'OSC 52')
     assert(require('mason.settings').current.max_concurrent_installers == 2)
   end

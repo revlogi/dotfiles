@@ -1,8 +1,8 @@
-local platform = require 'custom.utils.platform'
+local platform = require 'revlogi.utils.platform'
 
 -- Register hooks before vim.pack can install anything from the lockfile.
 vim.api.nvim_create_autocmd('PackChanged', {
-  group = vim.api.nvim_create_augroup('custom-pack-build', { clear = true }),
+  group = vim.api.nvim_create_augroup('revlogi-pack-build', { clear = true }),
   desc = 'Build native Telescope extension and update installed Treesitter parsers',
   callback = function(event)
     local data = event.data
@@ -53,19 +53,19 @@ vim.pack.add({
 
 -- Setup order is deliberate: theme first, Treesitter before Markdown, and
 -- completion capabilities before LSP configuration. No discovery or loaders.
-require 'custom.plugins.catppuccin'
-require 'custom.plugins.mini'
-require 'custom.plugins.guess-indent'
-require 'custom.plugins.gitsigns'
-require 'custom.plugins.oil'
-require 'custom.plugins.telescope'
-require 'custom.plugins.treesitter'
-require 'custom.plugins.render-markdown'
-require 'custom.plugins.lazydev'
-require 'custom.plugins.blink'
-require 'custom.plugins.lspconfig'
-require 'custom.plugins.conform'
-require 'custom.plugins.autopairs'
-require 'custom.plugins.which-key'
-require 'custom.plugins.todo-comments'
-require 'custom.plugins.vim-tmux-navigator'
+require 'revlogi.plugins.catppuccin'
+require 'revlogi.plugins.mini'
+require 'revlogi.plugins.guess-indent'
+require 'revlogi.plugins.gitsigns'
+require 'revlogi.plugins.oil'
+require 'revlogi.plugins.telescope'
+require 'revlogi.plugins.treesitter'
+require 'revlogi.plugins.render-markdown'
+require 'revlogi.plugins.lazydev'
+require 'revlogi.plugins.blink'
+require 'revlogi.plugins.lspconfig'
+require 'revlogi.plugins.conform'
+require 'revlogi.plugins.autopairs'
+require 'revlogi.plugins.which-key'
+require 'revlogi.plugins.todo-comments'
+require 'revlogi.plugins.vim-tmux-navigator'

@@ -7,5 +7,14 @@ vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show float
 -- Exit terminal mode; <C-\><C-n> remains available if the terminal intercepts Esc.
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
--- Use Oil's command without requiring the plugin during keymap setup.
-vim.keymap.set('n', '-', '<CMD>Oil --float<CR>', { desc = 'Open parent directory' })
+vim.keymap.set('n', '<leader>tf', function()
+  require('revlogi.utils.editor').toggle_formatter()
+end, { desc = '[T]oggle [F]ormatter for buffer' })
+
+vim.keymap.set('n', '<leader>bd', function()
+  require('revlogi.utils.editor').delete_hidden_buffers()
+end, { desc = '[B]uffer [D]elete hidden' })
+
+vim.keymap.set('x', '<leader>cc', function()
+  require('revlogi.utils.editor').copy_as_codeblock()
+end, { desc = '[C]opy selection as [C]odeblock' })

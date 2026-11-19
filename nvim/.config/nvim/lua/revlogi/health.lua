@@ -19,7 +19,7 @@ end
 
 return {
   check = function()
-    vim.health.start 'dotfiles'
+    vim.health.start 'revlogi'
     vim.health.info('System: ' .. vim.inspect(vim.uv.os_uname()))
     check_version()
     check_external_requirements()

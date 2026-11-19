@@ -20,7 +20,7 @@ On macOS, `brew bundle` supplies Node/npm, Bun for Pi tests, the Tree-sitter CLI
 and SwiftFormat. Swift support also requires `xcrun sourcekit-lsp` from the local
 Swift/Xcode toolchain. Mason installs missing language servers, shfmt, ShellCheck,
 and Prettierd when Neovim starts; inspect progress with `:Mason` and check tools
-with `:checkhealth dotfiles` and `:ConformInfo`.
+with `:checkhealth revlogi` and `:ConformInfo`.
 
 Remote Linux retains its small automatic-install list (Lua/C++ and their
 formatters). For optional web/shell editing, install Node/npm on that host and use

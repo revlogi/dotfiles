@@ -1,14 +1,18 @@
+local platform = require 'revlogi.utils.platform'
+
 -- Leaders must be set before loading keymaps or plugins.
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 vim.g.have_nerd_font = true
 
--- Treat .v files as Verilog, including empty or unfinished modules.
-vim.g.filetype_v = 'verilog'
-
--- Keep Classic separate from Haskell tooling; override Neovim's BrighterScript .bs default.
--- CUDA sources and headers share the same language tooling.
-vim.filetype.add { extension = { bs = 'bluespec', cu = 'cuda', cuh = 'cuda' } }
+-- Also support launching Neovim without a login shell on macOS.
+if platform.is_macos and vim.fn.executable 'racket' == 0 then
+  for _, bin in ipairs(vim.fn.glob('/Applications/Racket*/bin', false, true)) do
+    if vim.fn.executable(bin .. '/racket') == 1 then
+      vim.env.PATH = bin .. ':' .. vim.env.PATH
+    end
+  end
+end
 
 -- Show relative line numbers.
 vim.o.number = true
@@ -26,9 +30,12 @@ vim.opt.matchtime = 2
 vim.o.mouse = 'a'
 vim.o.showmode = false
 
+-- Avoid noticeable delays for CursorHold-based features.
+vim.o.updatetime = 300
+
 -- Defer clipboard setup to avoid slowing startup; use OSC 52 over SSH.
 vim.schedule(function()
-  if require('custom.utils.platform').is_remote then
+  if platform.is_remote then
     local osc52 = require 'vim.ui.clipboard.osc52'
     vim.g.clipboard = {
       name = 'OSC 52',
